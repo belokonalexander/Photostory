@@ -22,4 +22,8 @@ public class Settings {
     public WorkMode getWorkMode() {
         return workMode;
     }
+
+
+    //tags
+    public final String BACKPRESS_ENABLE = "BACKPRESS";
 }

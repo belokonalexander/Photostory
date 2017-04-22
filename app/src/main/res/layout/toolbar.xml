@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/toolbar_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:id="@+id/default_background"
+        android:background="@drawable/black_background_for_text_reverse"/>
+
+       <!-- -->
+
+
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:minHeight="?android:actionBarSize"
+        android:background="@color/colorPrimary"
+        android:id="@+id/toolbar"
+        app:titleTextColor="@color/normal_text_color_white"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        />
+
+
+
+
+    <View
+        android:id="@+id/toolbar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/toolbar_dropshadow"
+        />
+        <!-- -->
+
+</RelativeLayout>
+
+
