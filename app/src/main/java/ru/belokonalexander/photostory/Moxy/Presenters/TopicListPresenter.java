@@ -3,20 +3,18 @@ package ru.belokonalexander.photostory.Moxy.Presenters;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import javax.inject.Inject;
-
 import ru.belokonalexander.photostory.Models.Topic;
-import ru.belokonalexander.photostory.Moxy.ViewInterface.IMainActivityView;
+import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
 /**
  * Created by Alexander on 22.04.2017.
  */
 
 @InjectViewState
-public class MainActivityPresenter extends MvpPresenter<IMainActivityView> {
+public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
 
-    public MainActivityPresenter() {
+    public TopicListPresenter() {
     }
 
 
@@ -29,10 +27,6 @@ public class MainActivityPresenter extends MvpPresenter<IMainActivityView> {
 
     }
 
-    public void clearNavigationState() {
 
-        getViewState().returnToRoot();
-
-    }
 
 }

@@ -1,6 +1,7 @@
 package ru.belokonalexander.photostory.Moxy.ViewInterface;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import ru.belokonalexander.photostory.Models.Topic;
@@ -10,12 +11,10 @@ import ru.belokonalexander.photostory.Models.Topic;
  */
 
 
-public interface IMainActivityView extends MvpView {
+public interface ITopicListView extends MvpView {
 
-    @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "navigation")
+    @StateStrategyType(value = AddToEndSingleStrategy.class)
     void showTopic(Topic topic);
 
-    @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "navigation")
-    void returnToRoot();
 
 }

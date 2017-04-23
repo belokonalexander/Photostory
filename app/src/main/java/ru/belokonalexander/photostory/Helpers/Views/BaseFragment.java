@@ -1,18 +1,13 @@
 package ru.belokonalexander.photostory.Helpers.Views;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import javax.inject.Inject;
 
 import ru.belokonalexander.photostory.App;
-import ru.belokonalexander.photostory.DI.Components.DaggerAppComponent;
 import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Helpers.Settings;
 
@@ -24,10 +19,10 @@ import ru.belokonalexander.photostory.Helpers.Settings;
 public abstract class BaseFragment extends MvpAppCompatFragment {
 
     @Inject
-    Settings settings;
+    protected Settings settings;
 
     @Inject
-    Logger logger;
+    protected Logger logger;
 
     String title;
 
@@ -35,7 +30,7 @@ public abstract class BaseFragment extends MvpAppCompatFragment {
         if(getArguments()!=null && getArguments().getBoolean(settings.BACKPRESS_ENABLE)){
             getToolbar().setNavigationIcon(android.R.drawable.ic_menu_day);
 
-            getToolbar().setNavigationOnClickListener(view1 -> {
+            /*getToolbar().setNavigationOnClickListener(view1 -> {
 
 
                 getActivity().onBackPressed();
@@ -54,7 +49,7 @@ public abstract class BaseFragment extends MvpAppCompatFragment {
                 if(fragment!=null)
                     fragment.onResume();
 
-            });
+            });*/
 
         }  else {
             getToolbar().setNavigationIcon(null);
@@ -88,7 +83,7 @@ public abstract class BaseFragment extends MvpAppCompatFragment {
     }
 
     public Toolbar getToolbar(){
-        return ((BaseActivity)getActivity()).getToolbar();
+        return ((BaseFragmentActivity)getActivity()).getToolbar();
     }
 
 }

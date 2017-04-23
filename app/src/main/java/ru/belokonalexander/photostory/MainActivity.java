@@ -1,33 +1,27 @@
 package ru.belokonalexander.photostory;
 
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.PresenterType;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.belokonalexander.photostory.Helpers.Logger;
-import ru.belokonalexander.photostory.Helpers.Settings;
-import ru.belokonalexander.photostory.Helpers.Views.BaseActivity;
+import ru.belokonalexander.photostory.Helpers.DoubleCort;
+import ru.belokonalexander.photostory.Helpers.Views.BaseFragmentActivity;
 import ru.belokonalexander.photostory.Models.Topic;
-import ru.belokonalexander.photostory.Moxy.Presenters.MainActivityPresenter;
-import ru.belokonalexander.photostory.Moxy.ViewInterface.IMainActivityView;
+import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
+import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
-public class MainActivity extends BaseActivity implements IMainActivityView {
+public class MainActivity extends BaseFragmentActivity implements ITopicListView {
 
-    @InjectPresenter(type = PresenterType.GLOBAL, tag = "Main")
-    MainActivityPresenter mainActivityPresenter;
+
+
 
     @Inject
     TopicContentFragment topicContentFragment;
@@ -60,50 +54,35 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
         App.getAppComponent().inject(this);
         ButterKnife.bind(this);
 
-        logger.logThis("Привет: " + settings.getWorkMode());
+        if(savedInstanceState==null) {
+
+            logger.logThis("Привет: " + settings.getWorkMode());
 
 
-        if(fragmentTopic==null) {
-            // одиночное меню
-            isDualMode = false;
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(getContainerId(), topicListFragment, addNewFragment(true));
-            ft.commit();
+            if (fragmentTopic == null) {
+                // одиночное меню
 
+                isDualMode = false;
+
+                initContainers(true, new DoubleCort<>(R.id.fragment_container, topicListFragment));
+
+
+            } else {
+                //большой экран
+                isDualMode = true;
+                initContainers(true, new DoubleCort<>(R.id.fragment_container_list, topicListFragment),
+                        new DoubleCort<>(R.id.fragment_topic, topicContentFragment));
+            }
 
         } else {
-            //большой экран
-            isDualMode = true;
+            if(!isDualMode)
+                initContainers(false, new DoubleCort<>(R.id.fragment_container, topicListFragment));
+            else  initContainers(false, new DoubleCort<>(R.id.fragment_container_list, topicListFragment),
+                    new DoubleCort<>(R.id.fragment_topic, topicContentFragment));
         }
-
-    }
-
-    @Override
-    public void showTopic(Topic topic) {
-
-        logger.logThis(" Topic: " + topic.getId());
-
-
-        if(!isDualMode){
-            openInThisContainer(topicContentFragment);
-        } else {
-
-        }
-
-
-
-    }
-
-    @Override
-    public void returnToRoot() {
-
     }
 
 
-    @Override
-    protected int getContainerId() {
-        return R.id.fragment_container;
-    }
 
     @Override
     public Toolbar getToolbar() {
@@ -112,6 +91,18 @@ public class MainActivity extends BaseActivity implements IMainActivityView {
 
     @Override
     public void onRootSetted() {
-        mainActivityPresenter.clearNavigationState();
+
+    }
+
+
+    @Override
+    public void showTopic(Topic topic) {
+       if(!isDualMode) {
+           topicContentFragment.setShowedTopic(topic);
+           openInContainer(topicContentFragment,R.id.fragment_container);
+
+        }
+
+        logger.logThis(" ---> " + topic.getId());
     }
 }
