@@ -2,8 +2,8 @@ package ru.belokonalexander.photostory.DI.Modules;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.belokonalexander.photostory.TopicContentFragment;
-import ru.belokonalexander.photostory.TopicListFragment;
+import ru.belokonalexander.photostory.ContentTopicFragment;
+import ru.belokonalexander.photostory.ListTopicsFragment;
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -13,13 +13,13 @@ import ru.belokonalexander.photostory.TopicListFragment;
 public class FragmentsModule {
 
     @Provides
-    TopicListFragment provideTopicListFragment(){
-        return new TopicListFragment();
+    ListTopicsFragment provideTopicListFragment(){
+        return new ListTopicsFragment();
     }
 
     @Provides
-    TopicContentFragment provideTopicContentFragment(){
-        return new TopicContentFragment();
+    ContentTopicFragment provideTopicContentFragment(){
+        return new ContentTopicFragment();
     }
 
 }

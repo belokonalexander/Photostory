@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import butterknife.ButterKnife;
@@ -19,7 +20,7 @@ import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
  * Created by Alexander on 22.04.2017.
  */
 
-public class TopicListFragment extends BaseFragment implements ITopicListView {
+public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicListView {
 
     @InjectPresenter
     TopicListPresenter presenter;
@@ -39,7 +40,7 @@ public class TopicListFragment extends BaseFragment implements ITopicListView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        setTitle("Список проектов");
+
     }
 
     @Override
@@ -47,9 +48,4 @@ public class TopicListFragment extends BaseFragment implements ITopicListView {
         ((MainActivity)getActivity()).showTopic(topic);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
 }

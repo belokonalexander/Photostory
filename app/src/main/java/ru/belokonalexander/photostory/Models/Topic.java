@@ -1,12 +1,13 @@
 package ru.belokonalexander.photostory.Models;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by Alexander on 22.04.2017.
  */
 
-public class Topic {
+public class Topic implements Serializable {
 
     Long id = Math.abs(new Random().nextLong()%1000);
 

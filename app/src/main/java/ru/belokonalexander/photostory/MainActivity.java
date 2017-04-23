@@ -1,46 +1,46 @@
 package ru.belokonalexander.photostory;
 
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.MvpAppCompatActivity;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.belokonalexander.photostory.Helpers.DoubleCort;
-import ru.belokonalexander.photostory.Helpers.Views.BaseFragmentActivity;
+import ru.belokonalexander.photostory.Helpers.Logger;
+import ru.belokonalexander.photostory.Helpers.Settings;
 import ru.belokonalexander.photostory.Models.Topic;
-import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
-public class MainActivity extends BaseFragmentActivity implements ITopicListView {
-
-
+public class MainActivity extends MvpAppCompatActivity implements ITopicListView {
 
 
     @Inject
-    TopicContentFragment topicContentFragment;
+    Logger logger;
 
     @Inject
-    TopicListFragment topicListFragment;
+    Settings settings;
+
+
+    @Inject
+    ListTopicsFragment topicListFragment;
 
 
     @Nullable
     @BindView(R.id.fragment_container)
-    ViewGroup fragmentContainer;
+    ViewGroup commonContainer;
 
     @Nullable
     @BindView(R.id.fragment_container_list)
-    ViewGroup fragmentContainerList;
+    ViewGroup containerListTopics;
 
     @Nullable
     @BindView(R.id.fragment_topic)
-    ViewGroup fragmentTopic;
+    ViewGroup containerTopic;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -59,47 +59,48 @@ public class MainActivity extends BaseFragmentActivity implements ITopicListView
             logger.logThis("Привет: " + settings.getWorkMode());
 
 
-            if (fragmentTopic == null) {
+            if (containerTopic == null) {
                 // одиночное меню
-
                 isDualMode = false;
 
-                initContainers(true, new DoubleCort<>(R.id.fragment_container, topicListFragment));
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, topicListFragment, null)
+                        .show(topicListFragment)
+                        .commit();
 
 
             } else {
                 //большой экран
                 isDualMode = true;
-                initContainers(true, new DoubleCort<>(R.id.fragment_container_list, topicListFragment),
-                        new DoubleCort<>(R.id.fragment_topic, topicContentFragment));
+
             }
 
         } else {
-            if(!isDualMode)
-                initContainers(false, new DoubleCort<>(R.id.fragment_container, topicListFragment));
-            else  initContainers(false, new DoubleCort<>(R.id.fragment_container_list, topicListFragment),
-                    new DoubleCort<>(R.id.fragment_topic, topicContentFragment));
+
         }
     }
 
 
 
     @Override
-    public Toolbar getToolbar() {
-        return toolbar;
-    }
-
-    @Override
-    public void onRootSetted() {
-
-    }
-
-
-    @Override
     public void showTopic(Topic topic) {
+
+       logger.logThis(" --------> " + topic.getId());
+
        if(!isDualMode) {
-           topicContentFragment.setShowedTopic(topic);
-           openInContainer(topicContentFragment,R.id.fragment_container);
+
+           ContentTopicFragment contentTopicFragment = new ContentTopicFragment();
+           Bundle bundle = new Bundle();
+           bundle.putSerializable("Topic",topic);
+           contentTopicFragment.setArguments(bundle);
+           //openInContainer(topicContentFragment,R.id.fragment_container);
+
+           getSupportFragmentManager().beginTransaction()
+                   .add(R.id.fragment_container, contentTopicFragment, "topic")
+                   .setCustomAnimations(R.anim.slide_in_left,0,0,R.anim.slide_out_right)
+                   .show(contentTopicFragment)
+                   .addToBackStack(null)
+                   .commit();
 
         }
 
