@@ -14,18 +14,20 @@
         android:orientation="horizontal"
         >
 
-        <FrameLayout
+        <fragment
+            class="ru.belokonalexander.photostory.ListTopicsFragment"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:id="@+id/fragment_container_list"
+            android:id="@+id/topic_list"
             />
 
-        <FrameLayout
+        <fragment
+            class="ru.belokonalexander.photostory.ContentTopicFragment"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:id="@+id/fragment_topic"
+            android:id="@+id/topic_content"
 
             />
 

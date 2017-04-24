@@ -1,6 +1,7 @@
 package ru.belokonalexander.photostory;
 
 import android.app.Application;
+import android.content.Context;
 
 import ru.belokonalexander.photostory.DI.Components.AppComponent;
 import ru.belokonalexander.photostory.DI.Components.DaggerAppComponent;
@@ -15,6 +16,8 @@ public class App extends Application {
 
     private static AppComponent appComponent;
 
+    private static Context appContext;
+
     public static AppComponent getAppComponent() {
         return appComponent;
     }
@@ -23,9 +26,14 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appComponent = buildComponent();
+        appContext = getApplicationContext();
     }
 
     private AppComponent buildComponent() {
         return DaggerAppComponent.builder().appModule(new AppModule(this, Settings.WorkMode.Release)).build();
+    }
+
+    public static Context getAppContext() {
+        return appContext;
     }
 }

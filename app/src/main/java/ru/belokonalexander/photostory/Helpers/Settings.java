@@ -26,4 +26,11 @@ public class Settings {
 
     //tags
     public final String BACKPRESS_ENABLE = "BACKPRESS";
+    public final String TOPIC_TAG = "TOPIC";
+
+
+    //params
+
+
+    public final int CLICK_DELAY = 50;
 }

@@ -26,6 +26,15 @@ public class TopicContentPresenter extends MvpPresenter<ITopicContentView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        onDataChanged();
+    }
+
+    public void setData(Topic topic){
+        currentTopic = topic;
+        onDataChanged();
+    }
+
+    public void onDataChanged(){
         getViewState().fillContent(currentTopic);
     }
 }

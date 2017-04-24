@@ -13,6 +13,7 @@ import ru.belokonalexander.photostory.Models.Topic;
 
 public interface ITopicContentView extends MvpView {
 
+    @StateStrategyType(value = AddToEndSingleStrategy.class)
     void fillContent(Topic topic);
 
 }

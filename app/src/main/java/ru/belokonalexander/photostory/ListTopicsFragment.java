@@ -11,7 +11,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import ru.belokonalexander.photostory.Helpers.Views.BaseFragment;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
@@ -45,7 +44,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
     @Override
     public void showTopic(Topic topic) {
-        ((MainActivity)getActivity()).showTopic(topic);
+        //делегируем обработку активити
+        ((ITopicListView)getActivity()).showTopic(topic);
     }
 
 }

@@ -3,11 +3,15 @@ package ru.belokonalexander.photostory.DI.Components;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import ru.belokonalexander.photostory.ContentTopicActivity;
+import ru.belokonalexander.photostory.ContentTopicFragment;
 import ru.belokonalexander.photostory.DI.Modules.AppModule;
 import ru.belokonalexander.photostory.DI.Modules.FragmentsModule;
-import ru.belokonalexander.photostory.Helpers.Views.BaseFragmentActivity;
-import ru.belokonalexander.photostory.Helpers.Views.BaseFragment;
+
+import ru.belokonalexander.photostory.ListTopicsFragment;
 import ru.belokonalexander.photostory.MainActivity;
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
+import ru.belokonalexander.photostory.Views.Search.EntitySearchView;
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -17,7 +21,12 @@ import ru.belokonalexander.photostory.MainActivity;
 @Singleton
 public interface AppComponent {
 
-    void inject(BaseFragmentActivity mainActivity);
-    void inject(BaseFragment mainActivity);
+
     void inject(MainActivity mainActivity);
+    void inject(ContentTopicActivity contentTopicActivity);
+
+    void inject(ContentTopicFragment contentTopicFragment);
+    void inject(ListTopicsFragment listTopicsFragment);
+
+
 }

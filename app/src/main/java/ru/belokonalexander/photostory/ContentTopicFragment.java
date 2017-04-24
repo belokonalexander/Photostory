@@ -9,17 +9,16 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.PresenterType;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.belokonalexander.photostory.Helpers.Views.BaseFragment;
+import ru.belokonalexander.photostory.Helpers.Settings;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicContentPresenter;
-import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicContentView;
-import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -31,53 +30,60 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
     @BindView(R.id.topic_id)
     TextView topicId;
 
-    @InjectPresenter()
+
+
+    @InjectPresenter
     TopicContentPresenter presenter;
+
+    @BindView(R.id.root)
+    ViewGroup root;
+
+    @Inject
+    Settings settings;
 
     @ProvidePresenter
     TopicContentPresenter provideTopicContentPresenter(){
-        return new TopicContentPresenter((Topic) getArguments().getSerializable("Topic"));
-    }
 
+        try {
+            Topic topic = (Topic) getArguments().getSerializable(settings.TOPIC_TAG);
+            return new TopicContentPresenter(topic);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
-    //public Topic getShowedTopic() {
-    //    return showedTopic;
-    //}
-
-    public void setShowedTopic(Topic showedTopic) {
-       // this.showedTopic = showedTopic;
-
-    }
-
-    private void fillViews() {
-        //topicId.setText(showedTopic.getId().toString());
+        return new TopicContentPresenter(null);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_topic_content,container,false);
-        ButterKnife.bind(this, view);
-        return view;
+        return inflater.inflate(R.layout.fragment_topic_content,container,false);
     }
-    //
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        App.getAppComponent().inject(this);
 
 
     }
 
     @Override
     public void fillContent(Topic topic) {
-        topicId.setText("---> " + String.valueOf(topic.getId()));
+
+        TextView textv = new TextView(getContext());
+
+        if(topic!=null)
+            textv.setText(" -> " + topic.getId());
+        else textv.setText(" -> Empty ");
+
+        root.addView(textv);
+
+    }
+
+    public void updateContent(Topic topic) {
+        presenter.setData(topic);
     }
 }

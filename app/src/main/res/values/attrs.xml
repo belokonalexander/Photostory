@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EntitySearchView">
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+        <attr name="hintTextColor" format="color" />
+        <attr name="buttonsColor" format="color"/>
+        <attr name="iconified" format="boolean"/>
+        <attr name="element_margin" format="dimension"/>
+
+    </declare-styleable>
+
+</resources>
