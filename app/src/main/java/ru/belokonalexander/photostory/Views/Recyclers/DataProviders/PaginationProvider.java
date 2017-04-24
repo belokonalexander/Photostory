@@ -31,7 +31,7 @@ public class PaginationProvider<T> implements SolidProvider<T> {
 
     @Override
     public List<T> getData() {
-        return paginationProviderController.getDate(state);
+        return paginationProviderController.getData(state);
     }
 
     public void setOffset(int offset) {
@@ -43,7 +43,7 @@ public class PaginationProvider<T> implements SolidProvider<T> {
     }
 
     public interface PaginationProviderController<T>{
-        List<T> getDate(PaginationSlider state);
+        List<T> getData(PaginationSlider state);
     }
 
 

@@ -42,10 +42,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
     @Inject
     Logger logger;
-    /*@OnClick(R.id.button)
-    void onClick(){
-        presenter.selectTopic(15);
-    }*/
+
+    public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
     SearchRecyclerView<Topic> topicsRecycler;
@@ -70,27 +68,27 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         LinearLayoutManager lm = new LinearLayoutManager(getContext());
 
         topicsRecycler.setLayoutManager(lm);
-        final int[] b = {0};
+
+
         topicsRecycler.init(adapter, new SearchProvider<Topic>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
             @Override
-            public List<Topic> getDate(PaginationSlider state) {
-                List<Topic> topics = new ArrayList<Topic>();
-
-                if(b[0] <2)
-                for(int i = 0; i < state.getPageSize(); i++){
-                    topics.add(new Topic());
-                }
-
-                b[0]++;
-                return topics;
+            public List<Topic> getData(PaginationSlider state) {
+               return presenter.getData(state);
             }
         }));
 
         if(savedInstanceState==null)
             topicsRecycler.initData();
-       /* else
-            topicsRecycler.setInitialData((List<CompositeTranslateModel>) savedInstanceState.getSerializable(IS_RECYCLER_DATA));*/
+        else
+            topicsRecycler.setInitialData((List<Topic>) savedInstanceState.getSerializable(IS_RECYCLER_DATA));
 
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(IS_RECYCLER_DATA, topicsRecycler.getCurrentData());
     }
 
     @Override
@@ -103,5 +101,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         //делегируем обработку активити
         ((ITopicListView)getActivity()).showTopic(topic);
     }
+
+
+
 
 }

@@ -15,8 +15,12 @@ public class Topic implements Serializable, SearchEntity {
     String title;
     Long id;
 
+    public static int count = 0;
+
     public Topic() {
-        id = Math.abs(new Random().nextLong()%1000);
+
+        id = (long) count;
+        count++;
         title = "Dummy - " + id;
     }
 
