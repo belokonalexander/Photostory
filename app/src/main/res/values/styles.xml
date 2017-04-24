@@ -75,7 +75,9 @@
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
-
+    <style name="ClickableItem">
+        <item name="android:background">@drawable/cardholder_click_selector</item>
+    </style>
 
 
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">

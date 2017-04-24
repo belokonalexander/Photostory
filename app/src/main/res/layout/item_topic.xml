@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/item_background"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/small_list_height">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_list_height"
+        android:id="@+id/item_view"
+        style="@style/AppCardView"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_list_height"
+            android:padding="@dimen/icon_padding"
+            style="@style/ClickableItem"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/OneLineTextView"
+                tools:text="123123111111"
+                android:paddingTop="@dimen/small_padding"
+                android:paddingBottom="@dimen/small_padding"
+                android:id="@+id/title"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

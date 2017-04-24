@@ -45,7 +45,7 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
     TopicContentPresenter provideTopicContentPresenter(){
 
         try {
-            Topic topic = (Topic) getArguments().getSerializable(settings.TOPIC_TAG);
+            Topic topic = (Topic) getArguments().getSerializable("Topic");
             return new TopicContentPresenter(topic);
         } catch (NullPointerException e) {
             e.printStackTrace();

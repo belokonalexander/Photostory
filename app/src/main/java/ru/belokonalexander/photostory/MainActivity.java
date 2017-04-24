@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements ITopicListView {
         setContentView(R.layout.activity_main);
         App.getAppComponent().inject(this);
         ButterKnife.bind(this);
+
+
     }
 
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements ITopicListView {
 
         if(contentTopicFragment==null){
             Intent intent = new Intent(this,ContentTopicActivity.class);
-            intent.putExtra(settings.TOPIC_TAG,topic);
+            intent.putExtra("Topic",topic);
             startActivity(intent);
         } else {
             contentTopicFragment.updateContent(topic);
