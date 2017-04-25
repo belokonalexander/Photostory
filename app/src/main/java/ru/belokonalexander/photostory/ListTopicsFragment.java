@@ -3,7 +3,6 @@ package ru.belokonalexander.photostory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +17,16 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
-import ru.belokonalexander.photostory.Views.Recyclers.ActionRecyclerView;
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchProvider;
+import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
+import ru.belokonalexander.photostory.Views.Recyclers.MVP.ActionRecyclerViewMVP;
 import ru.belokonalexander.photostory.Views.Recyclers.SearchRecyclerView;
 
 /**
@@ -46,7 +44,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
-    SearchRecyclerView<Topic> topicsRecycler;
+    ActionRecyclerViewMVP<Topic> topicsRecycler;
     TopicAdapter adapter;
 
     @Nullable
@@ -61,16 +59,16 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         ButterKnife.bind(this, view);
         App.getAppComponent().inject(this);
 
-        adapter = new TopicAdapter(getContext());
+        /*adapter = new TopicAdapter(getContext());
 
-        adapter.setOnDelayedMainClick(this::showTopic);
+        adapter.setOnDelayedMainClick(this::showTopic);*/
 
         LinearLayoutManager lm = new LinearLayoutManager(getContext());
 
         topicsRecycler.setLayoutManager(lm);
 
 
-        topicsRecycler.init(adapter, new SearchProvider<Topic>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
+       /* topicsRecycler.init(adapter, new SearchProvider<Topic>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
             @Override
             public List<Topic> getData(PaginationSlider state) {
                return presenter.getData(state);
@@ -78,18 +76,32 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         }));
 
         if(savedInstanceState==null)
+            topicsRecycler.initData();*/
+
+        topicsRecycler.init(TopicAdapter.class, new SolidProvider<Topic>() {
+            @Override
+            public List<Topic> getData() {
+                List<Topic> topics = new ArrayList<Topic>();
+
+                for(int i =0; i < 10; i++)
+                    topics.add(new Topic());
+
+                return topics;
+            }
+        }, getMvpDelegate());
+
+        if(savedInstanceState==null){
             topicsRecycler.initData();
-        else
-            topicsRecycler.setInitialData((List<Topic>) savedInstanceState.getSerializable(IS_RECYCLER_DATA));
+        }
+
+
+        /*else
+            topicsRecycler.setInitialData((List<Topic>) savedInstanceState.getSerializable(IS_RECYCLER_DATA));*/
 
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(IS_RECYCLER_DATA, topicsRecycler.getCurrentData());
-    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

@@ -1,13 +1,9 @@
 package ru.belokonalexander.photostory;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ViewGroup;
-
-import com.arellomobile.mvp.MvpAppCompatActivity;
 
 import javax.inject.Inject;
 
@@ -47,9 +43,11 @@ public class MainActivity extends AppCompatActivity implements ITopicListView {
         ContentTopicFragment contentTopicFragment = (ContentTopicFragment)getSupportFragmentManager().findFragmentById(R.id.topic_content);
 
         if(contentTopicFragment==null){
-            Intent intent = new Intent(this,ContentTopicActivity.class);
+           Intent intent = new Intent(this,ContentTopicActivity.class);
             intent.putExtra("Topic",topic);
             startActivity(intent);
+
+
         } else {
             contentTopicFragment.updateContent(topic);
         }

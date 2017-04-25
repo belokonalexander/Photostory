@@ -55,7 +55,7 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
     }
 
     void onScrollHeightController(){
-        //StaticHelpers.LogThis(" ПРБУЮ ОБНОВИТЬ ");
+
         //максимальная позиция скроллера
         int totalScrollSize = computeVerticalScrollRange()-getHeight();
         if(totalScrollSize<=0){
@@ -65,7 +65,6 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
         //текущая позиция скроллера
         int currentScrollSize = computeVerticalScrollOffset();
 
-        //StaticHelpers.LogThis("РАЗМЕР ИЗМЕНЕН: " + " ТЕКУЩАЯ: " + currentScrollSize+ " ВСЕГО: " + totalScrollSize + " ГРАНИЦА: " + LOAD_BORDER);
         if( (!canScrollVertically(1) || currentScrollSize > totalScrollSize - LOAD_BORDER) && !allDataWasObtained && !loadingInProgress && preloadingIterations > MIN_PRELOAD_SCROLL) {
             getData(UpdateMode.ADD);
         }
@@ -77,7 +76,7 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
     @Override
     public void onDataSizeChanged() {
 
-        if(/*allDataWasObtained && */adapter.getRealItems()==0)
+        if(adapter.getRealItems()==0)
             enableEmptyController();
         else disableEmptyController();
 

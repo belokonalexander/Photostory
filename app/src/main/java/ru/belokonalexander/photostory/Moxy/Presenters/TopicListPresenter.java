@@ -35,7 +35,8 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
     }
 
     int b = 0;
-    @StateStrategyType(value = AddToEndSingleStrategy.class)
+
+
     public List<Topic> getData(PaginationSlider state){
         List<Topic> topics = new ArrayList<Topic>();
 
