@@ -3,6 +3,7 @@ package ru.belokonalexander.photostory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
@@ -92,6 +94,12 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
         if(savedInstanceState==null){
             topicsRecycler.initData();
+            topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {
+                @Override
+                public void onClick(Topic item) {
+                    presenter.selectTopic(item);
+                }
+            });
         }
 
 

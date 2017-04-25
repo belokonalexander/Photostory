@@ -230,4 +230,8 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
         void onEmpty();
         void onFilled();
     }
+
+    public void setOnItemClickListener(CommonAdapter.OnClickListener<T> onItemClickListener) {
+        adapter.setOnDelayedMainClick(onItemClickListener);
+    }
 }

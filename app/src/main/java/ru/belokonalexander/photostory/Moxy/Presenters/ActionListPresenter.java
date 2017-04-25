@@ -35,6 +35,7 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
     public void getData(UpdateMode updateMode){
         isExecuting = true;
         Log.e("TAG", "----> " + provider);
+
         getViewState().update(provider.getData(),updateMode);
         isExecuting = false;
     }

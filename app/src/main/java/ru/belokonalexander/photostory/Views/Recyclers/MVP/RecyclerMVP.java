@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -14,6 +15,7 @@ import java.util.List;
 import ru.belokonalexander.photostory.Moxy.Presenters.ActionListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.VIActionList;
 import ru.belokonalexander.photostory.Views.CounterWidget;
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
 /**
@@ -59,4 +61,6 @@ public class RecyclerMVP extends RecyclerView  {
         mvpDelegate.setParentDelegate(parentDelegate, String.valueOf(getId()));
         return mvpDelegate;
     }
+
+
 }

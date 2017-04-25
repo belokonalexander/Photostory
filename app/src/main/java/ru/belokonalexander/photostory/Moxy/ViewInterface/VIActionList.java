@@ -14,7 +14,9 @@ import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
 public interface VIActionList<T> extends MvpView {
 
-    @StateStrategyType(value = SkipStrategy.class)
+
     void update(List<T> data, UpdateMode updateMode);
+
+
 
 }

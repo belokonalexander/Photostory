@@ -29,7 +29,7 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
 
 
     @BindView(R.id.topic_id)
-    CounterWidget topicId;
+    TextView topicId;
 
 
 
@@ -69,15 +69,12 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
         App.getAppComponent().inject(this);
 
 
-        topicId.init(getMvpDelegate());
-
     }
 
     CounterWidget testView;
 
     @Override
     public void fillContent(Topic topic) {
-/*
 
         TextView textv = new TextView(getContext());
 
@@ -87,20 +84,6 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
 
         root.addView(textv);
 
-
-                boolean add = false;
-                if(testView==null) {
-                testView = new CounterWidget(getContext());
-                    add = true;
-                }
-
-                testView.init(getMvpDelegate());
-
-                if(add) {
-                    testView.setText(" la la la");
-                    root.addView(testView);
-                }
-*/
 
     }
 

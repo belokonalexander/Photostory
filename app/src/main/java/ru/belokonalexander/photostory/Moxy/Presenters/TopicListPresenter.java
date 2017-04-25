@@ -25,30 +25,9 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
     }
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
-    public void selectTopic(long id) {
-
-        //todo get data from db
-        Topic topic = new Topic();
-
+    public void selectTopic(Topic topic) {
         getViewState().showTopic(topic);
-
     }
 
-    int b = 0;
-
-
-    public List<Topic> getData(PaginationSlider state){
-        List<Topic> topics = new ArrayList<Topic>();
-
-
-
-        if(b <2)
-            for(int i = 0; i < state.getPageSize(); i++){
-                topics.add(new Topic());
-            }
-
-        b++;
-        return topics;
-    }
 
 }
