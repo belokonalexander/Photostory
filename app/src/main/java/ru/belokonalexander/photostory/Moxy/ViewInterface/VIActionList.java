@@ -17,6 +17,10 @@ public interface VIActionList<T> extends MvpView {
 
     void update(List<T> data, UpdateMode updateMode);
 
+    @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "showControllerState")
+    void enableEmptyController();
 
+    @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "showControllerState")
+    void disableEmptyController();
 
 }

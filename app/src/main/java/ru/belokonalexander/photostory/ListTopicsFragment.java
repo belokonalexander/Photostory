@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.belokonalexander.photostory.Helpers.Logger;
+import ru.belokonalexander.photostory.Helpers.SimpleAsyncTask;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
@@ -83,6 +84,13 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         topicsRecycler.init(TopicAdapter.class, new SolidProvider<Topic>() {
             @Override
             public List<Topic> getData() {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 List<Topic> topics = new ArrayList<Topic>();
 
                 for(int i =0; i < 10; i++)
@@ -94,14 +102,15 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
         if(savedInstanceState==null){
             topicsRecycler.initData();
-            topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {
-                @Override
-                public void onClick(Topic item) {
-                    presenter.selectTopic(item);
-                }
-            });
+
         }
 
+        topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {
+            @Override
+            public void onClick(Topic item) {
+                presenter.selectTopic(item);
+            }
+        });
 
         /*else
             topicsRecycler.setInitialData((List<Topic>) savedInstanceState.getSerializable(IS_RECYCLER_DATA));*/

@@ -40,8 +40,6 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
         return new ActionListPresenter(provider);
     }
 
-
-
     /**
      *  адаптер с данными, содержащимися в списке
      */
@@ -72,7 +70,7 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
 
     @Override
     public void update(List<T> data, UpdateMode updateMode) {
-        Log.e("TAG", " ---> UPDATE DATA: " + data);
+
         //если подгрузка, то добавляем данные
         if(updateMode==UpdateMode.ADD) {
             if(!data.isEmpty()) {
@@ -83,6 +81,8 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
             rewriteAllInner(data);
         }
     }
+
+
 
 
     public void init(Class adapterHolderClass, SolidProvider<T> solidProvider, MvpDelegate delegate){
@@ -208,28 +208,23 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
 
     public void onDataSizeChanged(){
         if(adapter.getRealItems()==0)
-            enableEmptyController();
-        else disableEmptyController();
+            presenter.onEnableEmptyController();
+        else presenter.onDisableEmptyController();
     }
 
+    @Override
     public void enableEmptyController(){
-        if(onDataContentChangeListener!=null)
-            onDataContentChangeListener.onEmpty();
         emptyDataController.setVisibility(VISIBLE);
     }
 
+    @Override
     public void disableEmptyController(){
-        if(onDataContentChangeListener!=null)
-            onDataContentChangeListener.onFilled();
         emptyDataController.setVisibility(INVISIBLE);
     }
 
-    ActionRecyclerView.OnDataContentChangeListener onDataContentChangeListener;
 
-    public interface OnDataContentChangeListener{
-        void onEmpty();
-        void onFilled();
-    }
+
+
 
     public void setOnItemClickListener(CommonAdapter.OnClickListener<T> onItemClickListener) {
         adapter.setOnDelayedMainClick(onItemClickListener);
