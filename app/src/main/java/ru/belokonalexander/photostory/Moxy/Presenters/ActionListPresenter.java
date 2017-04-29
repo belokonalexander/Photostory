@@ -1,5 +1,6 @@
 package ru.belokonalexander.photostory.Moxy.Presenters;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -12,6 +13,7 @@ import ru.belokonalexander.photostory.Helpers.SimpleAsyncTask;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.VIActionList;
 import ru.belokonalexander.photostory.Views.Recyclers.ActionRecyclerView;
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
@@ -30,17 +32,52 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
 
     private boolean isExecuting = false;
 
+    private final int CLICK_DELAY = 50;
+
+    private boolean mainClickExecuting = false;
+
     public <T> ActionListPresenter(SolidProvider<T> provider) {
         this.provider = provider;
     }
 
-    public interface OnDataContentChangeListener{
-        void onEmpty();
-        void onFilled();
+    private OnDataContentChangeListener onDataContentChangeListener;
+
+    private CommonAdapter.OnClickListener onClickListener;
+
+    public void getData(UpdateMode updateMode){
+
+        isExecuting = true;
+
+        SimpleAsyncTask.create(() -> provider.getData(), result -> {
+            isExecuting = false;
+            getViewState().update(result,updateMode);
+        }).execute();
+
+
     }
 
-    ActionRecyclerView.OnDataContentChangeListener onDataContentChangeListener;
 
+    public void setOnDataContentChangeListener(OnDataContentChangeListener onDataContentChangeListener) {
+        this.onDataContentChangeListener = onDataContentChangeListener;
+    }
+
+    public void setOnClickListener(CommonAdapter.OnClickListener onClickListener) {
+
+
+        this.onClickListener = item -> {
+            if(mainClickExecuting)
+                return;
+
+            mainClickExecuting = true;
+            new Handler().postDelayed(() -> {
+                onClickListener.onClick(item);
+                mainClickExecuting = false;
+            }, CLICK_DELAY);
+
+        };
+
+        getViewState().setClickListener(this.onClickListener);
+    }
 
     public void onDisableEmptyController(){
         if(onDataContentChangeListener!=null)
@@ -54,18 +91,9 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
         getViewState().enableEmptyController();
     }
 
-    public void getData(UpdateMode updateMode){
-
-        isExecuting = true;
-
-        SimpleAsyncTask.create(() -> provider.getData(), result -> {
-            isExecuting = false;
-            getViewState().update(result,updateMode);
-        }).execute();
-
-
-
-
+    public interface OnDataContentChangeListener{
+        void onEmpty();
+        void onFilled();
     }
 
 }

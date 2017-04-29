@@ -127,30 +127,6 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    private boolean mainClickExecuting = false;
-
-    /**
-     * назначить главному клику по компоненту задержку, например, для отрисовки анимации
-     * или для других действий
-     * @param onClickListener
-     */
-    public void setOnDelayedMainClick(OnClickListener<T> onClickListener){
-        this.onClickListener = item -> {
-            if(mainClickExecuting)
-                return;
-
-            mainClickExecuting = true;
-            new Handler().postDelayed(() -> {
-                onClickListener.onClick(item);
-                mainClickExecuting = false;
-            }, CLICK_DELAY);
-
-        };
-    }
-
-
-
-
     public interface OnClickListener<T>{
         void onClick(T item);
     }

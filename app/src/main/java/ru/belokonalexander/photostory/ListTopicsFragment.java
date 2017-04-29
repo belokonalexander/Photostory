@@ -85,12 +85,6 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
             @Override
             public List<Topic> getData() {
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
                 List<Topic> topics = new ArrayList<Topic>();
 
                 for(int i =0; i < 10; i++)

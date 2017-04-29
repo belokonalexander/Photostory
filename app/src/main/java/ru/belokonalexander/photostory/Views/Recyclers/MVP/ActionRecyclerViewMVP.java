@@ -222,11 +222,18 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
         emptyDataController.setVisibility(INVISIBLE);
     }
 
+    @Override
+    public void setClickListener(CommonAdapter.OnClickListener<T> onItemClickListener) {
+        adapter.setOnClickListener(onItemClickListener);
+    }
 
 
+    public void setOnDataContentChangeListener(ActionListPresenter.OnDataContentChangeListener listener){
+        presenter.setOnDataContentChangeListener(listener);
+    }
 
 
     public void setOnItemClickListener(CommonAdapter.OnClickListener<T> onItemClickListener) {
-        adapter.setOnDelayedMainClick(onItemClickListener);
+        presenter.setOnClickListener(onItemClickListener);
     }
 }
