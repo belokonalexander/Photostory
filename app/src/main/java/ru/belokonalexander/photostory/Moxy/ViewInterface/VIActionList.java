@@ -2,6 +2,8 @@ package ru.belokonalexander.photostory.Moxy.ViewInterface;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
@@ -16,7 +18,7 @@ import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
 public interface VIActionList<T> extends MvpView {
 
-
+   /* @StateStrategyType(value = AddToEndSingleStrategy.class)*/
     void update(List<T> data, UpdateMode updateMode);
 
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "showControllerState")
@@ -25,7 +27,7 @@ public interface VIActionList<T> extends MvpView {
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "showControllerState")
     void disableEmptyController();
 
-    @StateStrategyType(value = AddToEndSingleStrategy.class)
+    @StateStrategyType(value = SkipStrategy.class)
     void setClickListener(CommonAdapter.OnClickListener<T> onItemClickListener);
 
 }

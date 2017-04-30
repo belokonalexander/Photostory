@@ -30,7 +30,8 @@ import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSl
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.MVP.ActionRecyclerViewMVP;
-import ru.belokonalexander.photostory.Views.Recyclers.SearchRecyclerView;
+import ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP;
+
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -47,7 +48,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
-    ActionRecyclerViewMVP<Topic> topicsRecycler;
+    LazyLoadingRecyclerViewMVP<Topic> topicsRecycler;
     TopicAdapter adapter;
 
     @Nullable
@@ -76,27 +77,36 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
             public List<Topic> getData(PaginationSlider state) {
                return presenter.getData(state);
             }
-        }));
+        }));*/
 
-        if(savedInstanceState==null)
-            topicsRecycler.initData();*/
 
-        topicsRecycler.init(TopicAdapter.class, new SolidProvider<Topic>() {
-            @Override
-            public List<Topic> getData() {
+        topicsRecycler.init(TopicAdapter.class, new PaginationProvider<Topic>(new PaginationProvider.PaginationProviderController<Topic>() {
+                        @Override
+                        public List<Topic> getData(PaginationSlider state) {
 
-                List<Topic> topics = new ArrayList<Topic>();
 
-                for(int i =0; i < 10; i++)
-                    topics.add(new Topic());
+                            Log.e("TAG", "Данные: -----------> " + state);
 
-                return topics;
-            }
-        }, getMvpDelegate());
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            List<Topic> topics = new ArrayList<Topic>();
+
+                            for(int i = state.getOffset(); i < state.getPageSize()+state.getOffset(); i++)
+                                topics.add(new Topic((long) i));
+
+                            return topics;
+
+                        }
+                    })
+            , getMvpDelegate());
+
 
         if(savedInstanceState==null){
             topicsRecycler.initData();
-
         }
 
         topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {

@@ -1,21 +1,27 @@
-package ru.belokonalexander.photostory.Views.Recyclers;
+package ru.belokonalexander.photostory.Views.Recyclers.MVP;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
+
+import com.arellomobile.mvp.MvpDelegate;
 
 import java.util.List;
 
+import ru.belokonalexander.photostory.Views.Recyclers.ActionRecyclerView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
+import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
+import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
 
 /**
  * класс для ленивого отображения списка с подгрузкой
  * @param <T> тип элемента списка
  */
-public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
+public class LazyLoadingRecyclerViewMVP<T>  extends ActionRecyclerViewMVP<T> {
 
     private double LOAD_BORDER = 0; //px - количество пикселов до конца списка, перед началом подгрузкой
 
@@ -33,9 +39,8 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
     public final int MIN_PRELOAD_SCROLL = 3;
 
 
-
-    public void init(CommonAdapter<T> adapter, PaginationProvider<T> provider) {
-        super.init(adapter, provider);
+    @Override
+    public void init(Class adapterHolderClass, SolidProvider<T> solidProvider, MvpDelegate delegate) {
 
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -45,7 +50,9 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
             }
         });
 
+        super.init(adapterHolderClass, solidProvider, delegate);
     }
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -65,8 +72,11 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
         //текущая позиция скроллера
         int currentScrollSize = computeVerticalScrollOffset();
 
-        if( (!canScrollVertically(1) || currentScrollSize > totalScrollSize - LOAD_BORDER) && !allDataWasObtained && !loadingInProgress && preloadingIterations > MIN_PRELOAD_SCROLL) {
-            getData(UpdateMode.ADD);
+        if( (!canScrollVertically(1) || currentScrollSize > totalScrollSize - LOAD_BORDER) && !allDataWasObtained /*&& !loadingInProgress*/ && preloadingIterations > MIN_PRELOAD_SCROLL) {
+
+
+
+            dataLoading(UpdateMode.ADD);
         }
 
         preloadingIterations++;
@@ -87,12 +97,12 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
 
     }
 
+
     @Override
-    public void afterUpdating(UpdateMode updateMode, List<T> result) {
+    public void update(List<T> data, UpdateMode updateMode) {
         preloadingIterations = 0;
         //проверка - все ли данные отдал поставщик
-        allDataWasObtained = result.size() < ((PaginationProvider)provider).getPageSize();
-
+        allDataWasObtained = data.size() < presenter.getPageSize();
 
         if(allDataWasObtained) {
             adapter.setDecoration(CommonAdapter.Decoration.SIMPLE);
@@ -100,14 +110,24 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
         } else if(adapter.getDecoration()!= CommonAdapter.Decoration.FOOTER)
             adapter.setDecoration(CommonAdapter.Decoration.FOOTER);
 
-        super.afterUpdating(updateMode,result);
+        super.update(data,updateMode);
+    }
+
+
+
+    @Override
+    protected void dataLoading(UpdateMode updateMode) {
+
+        if (updateMode == UpdateMode.ADD)
+            presenter.setOffset(adapter.getRealItems());
+        else presenter.setOffset(0);
+
+        super.dataLoading(updateMode);
     }
 
     @Override
-    protected List<T> dataLoading(UpdateMode updateMode) {
-        if (updateMode == UpdateMode.ADD)
-            ((PaginationProvider)provider).setOffset(adapter.getRealItems());
-        return super.dataLoading(updateMode);
+    public void initData() {
+        dataLoading(UpdateMode.INITIAL);
     }
 
     @Override
@@ -115,18 +135,12 @@ public class LazyLoadingRecyclerView<T>  extends ActionRecyclerView<T>{
         super.removeAll();
     }
 
-    public LazyLoadingRecyclerView(Context context) {
+    public LazyLoadingRecyclerViewMVP(Context context) {
         super(context);
     }
 
-    public LazyLoadingRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public LazyLoadingRecyclerViewMVP(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
-
-    public LazyLoadingRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-
 
 }

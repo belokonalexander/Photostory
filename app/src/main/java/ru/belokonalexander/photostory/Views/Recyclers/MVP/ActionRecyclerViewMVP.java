@@ -34,11 +34,7 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
     @InjectPresenter
     ActionListPresenter presenter;
 
-    @ProvidePresenter
-    ActionListPresenter provideActionListPresenter(){
-        Log.e("TAG", "CONST: " + provider);
-        return new ActionListPresenter(provider);
-    }
+
 
     /**
      *  адаптер с данными, содержащимися в списке
@@ -56,7 +52,7 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
     int defaultItemHeight;
 
 
-    private SolidProvider<T> provider;
+    //protected SolidProvider<T> provider;
 
 
     public ActionRecyclerViewMVP(Context context) {
@@ -71,6 +67,8 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
     @Override
     public void update(List<T> data, UpdateMode updateMode) {
 
+        Log.e("TAG", "Было: " + adapter.getRealItems() + " Список обновляется -> " + data.size());
+
         //если подгрузка, то добавляем данные
         if(updateMode==UpdateMode.ADD) {
             if(!data.isEmpty()) {
@@ -78,7 +76,7 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
             }
         } else {
             //если другие режимы, то данные переписываются
-            rewriteAllInner(data);
+            rewriteAll(data);
         }
     }
 
@@ -97,7 +95,6 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
             defaultItemHeight = getContext().getResources().getDimensionPixelSize(R.dimen.default_list_height);
         }
 
-        provider = solidProvider;
 
         try {
             adapter = (CommonAdapter<T>) Class.forName(adapterHolderClass.getName()).getConstructor(Context.class).newInstance(getContext());
@@ -109,10 +106,20 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
 
 
         init(delegate);
+
+        if(presenter.getProvider()==null)
+            presenter.setProvider(solidProvider);
+    }
+
+
+
+
+    protected void dataLoading(UpdateMode updateMode){
+        presenter.getData(updateMode);
     }
 
     public void initData(){
-        presenter.getData(UpdateMode.INITIAL);
+        dataLoading(UpdateMode.INITIAL);
     }
 
     /**
@@ -191,6 +198,9 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
      * @param list
      */
     final protected void addInner(List<T> list) {
+
+        Log.e("TAG", "ADD INNTER: " + list.size());
+
         int was = adapter.getData().size();
         adapter.getData().addAll(list);
         adapter.notifyItemRangeChanged(was,adapter.getData().size());
@@ -199,6 +209,7 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
 
     final protected void rewriteAllInner(List<T> data){
 
+        Log.e("TAG", "REWRITE ALL: " + data.size());
 
         adapter.setData(data);
         adapter.notifyDataSetChanged();

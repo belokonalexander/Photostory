@@ -14,6 +14,7 @@ import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.VIActionList;
 import ru.belokonalexander.photostory.Views.Recyclers.ActionRecyclerView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
+import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
@@ -30,31 +31,50 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
 
     private SolidProvider provider;
 
-    private boolean isExecuting = false;
+    //private boolean isExecuting = false;
 
     private final int CLICK_DELAY = 50;
 
     private boolean mainClickExecuting = false;
 
-    public <T> ActionListPresenter(SolidProvider<T> provider) {
+    public <T> ActionListPresenter() {
+
+    }
+
+    public void setProvider(SolidProvider provider) {
         this.provider = provider;
+    }
+
+    public SolidProvider getProvider() {
+        return provider;
     }
 
     private OnDataContentChangeListener onDataContentChangeListener;
 
     private CommonAdapter.OnClickListener onClickListener;
 
+    SimpleAsyncTask lastTask;
+
     public void getData(UpdateMode updateMode){
 
-        isExecuting = true;
 
-        SimpleAsyncTask.create(() -> provider.getData(), result -> {
-            isExecuting = false;
-            getViewState().update(result,updateMode);
-        }).execute();
+        if(updateMode!=UpdateMode.ADD && lastTask!=null)
+            lastTask.interrupt();
 
+
+        if(lastTask==null || !lastTask.isRunning()) {
+
+            Log.e("TAG", "Данные подгружаются... " + provider);
+
+            lastTask = SimpleAsyncTask.create(() -> provider.getData(), result -> {
+                getViewState().update(result, updateMode);
+            });
+
+            lastTask.execute();
+        }
 
     }
+
 
 
     public void setOnDataContentChangeListener(OnDataContentChangeListener onDataContentChangeListener) {
@@ -63,17 +83,14 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
 
     public void setOnClickListener(CommonAdapter.OnClickListener onClickListener) {
 
-
         this.onClickListener = item -> {
             if(mainClickExecuting)
                 return;
-
             mainClickExecuting = true;
             new Handler().postDelayed(() -> {
                 onClickListener.onClick(item);
                 mainClickExecuting = false;
             }, CLICK_DELAY);
-
         };
 
         getViewState().setClickListener(this.onClickListener);
@@ -89,6 +106,17 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
         if(onDataContentChangeListener!=null)
             onDataContentChangeListener.onEmpty();
         getViewState().enableEmptyController();
+    }
+
+    public int getPageSize() {
+        if(provider instanceof PaginationProvider)
+            return ((PaginationProvider)provider).getPageSize();
+        else return 0;
+    }
+
+    public void setOffset(int offset) {
+        if(provider instanceof PaginationProvider)
+            ((PaginationProvider) provider).setOffset(offset);
     }
 
     public interface OnDataContentChangeListener{

@@ -22,6 +22,13 @@ public class Topic implements Serializable, SearchEntity {
         id = (long) count;
         count++;
         title = "Dummy - " + id;
+
+    }
+
+    public Topic(Long c) {
+        id = c;
+        title = "Dummy - " + id;
+
     }
 
     public Long getId() {

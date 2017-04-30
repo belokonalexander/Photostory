@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ru.belokonalexander.photostory.Views.Recyclers.MVP.ActionRecyclerViewMVP
+        <ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/topics_recycler"

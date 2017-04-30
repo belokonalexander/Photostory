@@ -14,7 +14,7 @@ public class PaginationProvider<T> implements SolidProvider<T> {
     protected PaginationProviderController<T> paginationProviderController;
 
     //стандартный размер данных
-    protected int pageSize = 40;
+    protected int pageSize = 20;
 
     public PaginationProvider(PaginationProviderController<T> paginationProviderController) {
         this.paginationProviderController = paginationProviderController;
@@ -46,5 +46,12 @@ public class PaginationProvider<T> implements SolidProvider<T> {
         List<T> getData(PaginationSlider state);
     }
 
-
+    @Override
+    public String toString() {
+        return "PaginationProvider{" +
+                "state=" + state +
+                ", paginationProviderController=" + paginationProviderController +
+                ", pageSize=" + pageSize +
+                '}';
+    }
 }

@@ -1,3 +1,4 @@
+/*
 package ru.belokonalexander.photostory.Views.Recyclers;
 
 import android.content.Context;
@@ -17,17 +18,20 @@ import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchInputData;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchProvider;
+import ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP;
 import ru.belokonalexander.photostory.Views.Search.EntitySearchView;
 import ru.belokonalexander.photostory.Views.Search.SearchEntity;
 import ru.belokonalexander.photostory.Views.Search.SearchItem;
 
 
+*/
 /**
  * список с подгрузкой, реализующий функционал поиска
  * @param <T>
  * стоит обратить вниманеие на Override методы по добавлению элементов - они работают в зависимости от текущего фильтра
- */
-public class SearchRecyclerView<T extends SearchEntity> extends LazyLoadingRecyclerView<T> {
+ *//*
+
+public class SearchRecyclerView<T extends SearchEntity> extends LazyLoadingRecyclerViewMVP<T> {
 
 
     EntitySearchView searchView;
@@ -154,11 +158,13 @@ public class SearchRecyclerView<T extends SearchEntity> extends LazyLoadingRecyc
 
     }
 
-    /**
+    */
+/**
      * проверяет, проходит ли значение по фильтру
      * @param item
      * @return
-     */
+     *//*
+
     private T filter(T item){
         if(!getCastProvider().stateIsEmpty()){
             try {
@@ -199,3 +205,4 @@ public class SearchRecyclerView<T extends SearchEntity> extends LazyLoadingRecyc
     }
 
 }
+*/

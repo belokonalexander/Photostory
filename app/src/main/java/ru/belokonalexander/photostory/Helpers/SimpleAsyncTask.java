@@ -43,6 +43,14 @@ public class SimpleAsyncTask<T> {
         return backgroundTaskWrapper.getStatus()!= AsyncTask.Status.PENDING;
     }
 
+    public boolean isRunning(){
+        return backgroundTaskWrapper.getStatus()== AsyncTask.Status.RUNNING;
+    }
+
+    public void interrupt(){
+        backgroundTaskWrapper.cancel(true);
+    }
+
     public static<S> SimpleAsyncTask create(InBackground<S> inBackgroundTask, PostExecute<S> postExecute){
         return new SimpleAsyncTask<S>(inBackgroundTask, postExecute);
     }

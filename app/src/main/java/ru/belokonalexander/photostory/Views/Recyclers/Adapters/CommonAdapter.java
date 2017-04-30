@@ -37,8 +37,15 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
     abstract  void onBindVH(RecyclerView.ViewHolder holder, int position);
 
     public void setData(List<T> data) {
-        this.data = data;
+        if(this.data==null)
+            this.data = data;
+        else {
+            this.data.clear();
+            this.data.addAll(data);
+        }
     }
+
+
 
     public enum Decoration {
         SIMPLE(0),FOOTER(10);
