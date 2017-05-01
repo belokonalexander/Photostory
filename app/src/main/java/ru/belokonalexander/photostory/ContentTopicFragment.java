@@ -19,7 +19,6 @@ import ru.belokonalexander.photostory.Helpers.Settings;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicContentPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicContentView;
-import ru.belokonalexander.photostory.Views.CounterWidget;
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -71,19 +70,9 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
 
     }
 
-    CounterWidget testView;
 
     @Override
     public void fillContent(Topic topic) {
-
-        TextView textv = new TextView(getContext());
-
-        if(topic!=null)
-            textv.setText(" -> " + topic.getId());
-        else textv.setText(" -> Empty ");
-
-        root.addView(textv);
-
 
     }
 

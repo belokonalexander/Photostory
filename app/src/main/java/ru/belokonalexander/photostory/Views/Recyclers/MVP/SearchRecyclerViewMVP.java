@@ -35,15 +35,15 @@ public class SearchRecyclerViewMVP<T extends SearchEntity> extends LazyLoadingRe
     @Override
     public void enableEmptyController() {
         super.enableEmptyController();
-        //if(((SearchProvider)provider).stateIsEmpty())
-        //    hideSearchController();
+        if(((SearchProvider)presenter.getProvider()).stateIsEmpty())
+            hideSearchController();
     }
 
 
     @Override
     public void disableEmptyController() {
         super.disableEmptyController();
-        //showSearchController();
+        showSearchController();
     }
 
 

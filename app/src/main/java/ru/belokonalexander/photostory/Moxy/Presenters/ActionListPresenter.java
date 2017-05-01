@@ -1,6 +1,7 @@
 package ru.belokonalexander.photostory.Moxy.Presenters;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -145,6 +146,17 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
     public void setOffset(int offset) {
         if(provider instanceof PaginationProvider)
             ((PaginationProvider) provider).setOffset(offset);
+    }
+
+    public void addItem(Object item) {
+
+        data.add(0,item);
+        getViewState().updateData(data,UpdateMode.DUMMY);
+
+        if(data.size()==0)
+            getViewState().enableEmptyController();
+        else getViewState().disableEmptyController();
+
     }
 
     public interface OnDataContentChangeListener{

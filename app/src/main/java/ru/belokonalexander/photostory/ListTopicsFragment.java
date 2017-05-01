@@ -2,6 +2,7 @@ package ru.belokonalexander.photostory;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     @Inject
     Logger logger;
 
+
+
     public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
@@ -66,69 +69,40 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         ButterKnife.bind(this, view);
         App.getAppComponent().inject(this);
 
-        /*adapter = new TopicAdapter(getContext());
-
-        adapter.setOnDelayedMainClick(this::showTopic);*/
-
         LinearLayoutManager lm = new LinearLayoutManager(getContext());
 
         topicsRecycler.setLayoutManager(lm);
-
-
-       /* topicsRecycler.init(adapter, new SearchProvider<Topic>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
-            @Override
-            public List<Topic> getData(PaginationSlider state) {
-               return presenter.getData(state);
-            }
-        }));*/
-
-        List<Topic> topics = new ArrayList<>();
-
-        for(int i =0; i < 20; i++){
-            topics.add(new Topic((long) i));
-        }
 
         topicsRecycler.init(TopicAdapter.class, new SearchProvider<>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
             @Override
             public List<Topic> getData(PaginationSlider state) {
 
-                Log.e("TAG", " SEARCH: " + state);
+               return new ArrayList<Topic>();
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                List<Topic> d = new ArrayList<>();
-
-                for(Topic t : topics)
-                    if(t.getTitle().contains(((SearchInputData)state).getValue()) && state.getOffset()<20)
-                        d.add(t);
-
-                return d; /*topics.subList(state.getOffset(),Math.min(topics.size(),state.getOffset()+state.getPageSize()));*/
             }
-        })
-            , getMvpDelegate());
+        }), getMvpDelegate());
+
+        topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {
+            @Override
+            public void onClick(Topic item) {
+                Log.e("TAG", " ------ " + topicsRecycler.presenter.getProvider());
+            }
+        });
 
 
         if(savedInstanceState==null){
             topicsRecycler.initData();
         }
 
-        topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {
-            @Override
-            public void onClick(Topic item) {
-                presenter.selectTopic(item);
-            }
-        });
 
-        /*else
-            topicsRecycler.setInitialData((List<Topic>) savedInstanceState.getSerializable(IS_RECYCLER_DATA));*/
 
     }
 
 
+    public void addNewTopic(Topic topic){
+
+        topicsRecycler.addItem(topic);
+    }
 
 
     @Override
@@ -139,6 +113,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     @Override
     public void showTopic(Topic topic) {
         //делегируем обработку активити
+        //т.к dual pane и может придется заполнят второй фрагмент
         ((ITopicListView)getActivity()).showTopic(topic);
     }
 

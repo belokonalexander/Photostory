@@ -77,11 +77,12 @@ public class LazyLoadingRecyclerViewMVP<T>  extends ActionRecyclerViewMVP<T> {
     public void updateData(List<T> data, UpdateMode updateMode) {
         preloadingIterations = 0;
 
-        if(updateMode == UpdateMode.FINISH) {
-            adapter.setDecoration(CommonAdapter.Decoration.SIMPLE);
-            adapter.notifyDataSetChanged();
-        } else if(adapter.getDecoration()!= CommonAdapter.Decoration.FOOTER)
-            adapter.setDecoration(CommonAdapter.Decoration.FOOTER);
+        if(updateMode!=UpdateMode.DUMMY)
+            if(updateMode == UpdateMode.FINISH) {
+                adapter.setDecoration(CommonAdapter.Decoration.SIMPLE);
+                adapter.notifyDataSetChanged();
+            } else if(adapter.getDecoration()!= CommonAdapter.Decoration.FOOTER)
+                adapter.setDecoration(CommonAdapter.Decoration.FOOTER);
 
         super.updateData(data, updateMode);
     }

@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -27,7 +28,7 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
 
 
     @InjectPresenter
-    ActionListPresenter presenter;
+    public ActionListPresenter presenter;
 
 
     /**
@@ -127,5 +128,10 @@ public class ActionRecyclerViewMVP<T> extends RecyclerMVP implements VIActionLis
 
     public void setOnItemClickListener(CommonAdapter.OnClickListener<T> onItemClickListener) {
         presenter.setOnClickListener(onItemClickListener);
+    }
+
+    public void addItem(T item) {
+
+        presenter.addItem(item);
     }
 }
