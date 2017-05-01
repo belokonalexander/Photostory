@@ -44,7 +44,7 @@ public class SimpleAsyncTask<T> {
     }
 
     public boolean isRunning(){
-        return backgroundTaskWrapper.getStatus()== AsyncTask.Status.RUNNING;
+        return !backgroundTaskWrapper.isCancelled() && backgroundTaskWrapper.getStatus()== AsyncTask.Status.RUNNING ;
     }
 
     public void interrupt(){

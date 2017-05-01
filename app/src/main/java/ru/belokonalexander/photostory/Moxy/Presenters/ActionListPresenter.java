@@ -10,16 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.belokonalexander.photostory.Helpers.SimpleAsyncTask;
-import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.VIActionList;
-import ru.belokonalexander.photostory.Views.Recyclers.ActionRecyclerView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by Alexander on 25.04.2017.
@@ -31,13 +26,15 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
 
     private SolidProvider provider;
 
-    //private boolean isExecuting = false;
+    private List data = new ArrayList();
 
     private final int CLICK_DELAY = 50;
 
     private boolean mainClickExecuting = false;
 
-    public <T> ActionListPresenter() {
+    private boolean allDataWasObtaining = false;
+
+    public ActionListPresenter() {
 
     }
 
@@ -57,17 +54,50 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
 
     public void getData(UpdateMode updateMode){
 
+        if(updateMode==UpdateMode.ADD && allDataWasObtaining)
+            return;
 
-        if(updateMode!=UpdateMode.ADD && lastTask!=null)
+        if(updateMode!=UpdateMode.ADD)
+            allDataWasObtaining = false;
+
+        if(updateMode!=UpdateMode.ADD && lastTask!=null) {
+            Log.e("TAG", "Прервали");
             lastTask.interrupt();
+        }
 
+        if(provider instanceof PaginationProvider) {
+            if(updateMode==UpdateMode.ADD)
+                ((PaginationProvider) provider).setOffset(data.size());
+             else
+                ((PaginationProvider) provider).setOffset(0);
+
+        }
+
+        /*if(lastTask!=null)
+            Log.e("TAG", "Работает? - " + lastTask.isRunning());*/
 
         if(lastTask==null || !lastTask.isRunning()) {
 
-            Log.e("TAG", "Данные подгружаются... " + provider);
-
             lastTask = SimpleAsyncTask.create(() -> provider.getData(), result -> {
-                getViewState().update(result, updateMode);
+
+                if(updateMode==UpdateMode.ADD)
+                    data.addAll(result);
+                else {
+                    data.clear();
+                    data.addAll(result);
+                }
+
+                //проверка - все ли данные получены
+                if(result.size() < getPageSize()){
+                    allDataWasObtaining= true;
+                    getViewState().updateData(data, UpdateMode.FINISH);
+                } else
+                    getViewState().updateData(data, updateMode);
+
+                if(data.size()==0)
+                    getViewState().enableEmptyController();
+                else getViewState().disableEmptyController();
+
             });
 
             lastTask.execute();
@@ -111,7 +141,7 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
     public int getPageSize() {
         if(provider instanceof PaginationProvider)
             return ((PaginationProvider)provider).getPageSize();
-        else return 0;
+        else return Integer.MAX_VALUE;
     }
 
     public void setOffset(int offset) {

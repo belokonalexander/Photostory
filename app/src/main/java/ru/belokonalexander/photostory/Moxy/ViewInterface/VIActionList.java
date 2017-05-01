@@ -19,7 +19,7 @@ import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 public interface VIActionList<T> extends MvpView {
 
    /* @StateStrategyType(value = AddToEndSingleStrategy.class)*/
-    void update(List<T> data, UpdateMode updateMode);
+    void updateData(List<T> data, UpdateMode updateMode);
 
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "showControllerState")
     void enableEmptyController();
@@ -29,5 +29,8 @@ public interface VIActionList<T> extends MvpView {
 
     @StateStrategyType(value = SkipStrategy.class)
     void setClickListener(CommonAdapter.OnClickListener<T> onItemClickListener);
+
+   /* @StateStrategyType(value = AddToEndSingleStrategy.class)
+    void onDataSizeChanged(int size);*/
 
 }

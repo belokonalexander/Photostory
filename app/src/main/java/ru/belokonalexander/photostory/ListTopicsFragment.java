@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +28,12 @@ import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
+import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchInputData;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.MVP.ActionRecyclerViewMVP;
 import ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP;
+import ru.belokonalexander.photostory.Views.Recyclers.MVP.SearchRecyclerViewMVP;
 
 
 /**
@@ -48,7 +51,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
-    LazyLoadingRecyclerViewMVP<Topic> topicsRecycler;
+    SearchRecyclerViewMVP<Topic> topicsRecycler;
     TopicAdapter adapter;
 
     @Nullable
@@ -79,29 +82,33 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
             }
         }));*/
 
+        List<Topic> topics = new ArrayList<>();
 
-        topicsRecycler.init(TopicAdapter.class, new PaginationProvider<Topic>(new PaginationProvider.PaginationProviderController<Topic>() {
-                        @Override
-                        public List<Topic> getData(PaginationSlider state) {
+        for(int i =0; i < 20; i++){
+            topics.add(new Topic((long) i));
+        }
 
+        topicsRecycler.init(TopicAdapter.class, new SearchProvider<>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
+            @Override
+            public List<Topic> getData(PaginationSlider state) {
 
-                            Log.e("TAG", "Данные: -----------> " + state);
+                Log.e("TAG", " SEARCH: " + state);
 
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-                            List<Topic> topics = new ArrayList<Topic>();
+                List<Topic> d = new ArrayList<>();
 
-                            for(int i = state.getOffset(); i < state.getPageSize()+state.getOffset(); i++)
-                                topics.add(new Topic((long) i));
+                for(Topic t : topics)
+                    if(t.getTitle().contains(((SearchInputData)state).getValue()) && state.getOffset()<20)
+                        d.add(t);
 
-                            return topics;
-
-                        }
-                    })
+                return d; /*topics.subList(state.getOffset(),Math.min(topics.size(),state.getOffset()+state.getPageSize()));*/
+            }
+        })
             , getMvpDelegate());
 
 

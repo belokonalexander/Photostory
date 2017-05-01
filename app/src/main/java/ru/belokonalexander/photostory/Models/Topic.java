@@ -3,7 +3,9 @@ package ru.belokonalexander.photostory.Models;
 import java.io.Serializable;
 import java.util.Random;
 
+import ru.belokonalexander.photostory.R;
 import ru.belokonalexander.photostory.Views.Search.SearchEntity;
+import ru.belokonalexander.photostory.Views.Search.SearchField;
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -12,7 +14,11 @@ import ru.belokonalexander.photostory.Views.Search.SearchEntity;
 public class Topic implements Serializable, SearchEntity {
 
 
+    @SearchField(lazySearch = true, alias = R.string.empty_data, order = 2)
     String title;
+
+
+
     Long id;
 
     public static int count = 0;
@@ -27,7 +33,7 @@ public class Topic implements Serializable, SearchEntity {
 
     public Topic(Long c) {
         id = c;
-        title = "Dummy - " + id;
+        title =  id + "Dummy - ";
 
     }
 

@@ -4,15 +4,12 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.arellomobile.mvp.MvpDelegate;
 
 import java.util.List;
 
-import ru.belokonalexander.photostory.Views.Recyclers.ActionRecyclerView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
@@ -30,11 +27,6 @@ public class LazyLoadingRecyclerViewMVP<T>  extends ActionRecyclerViewMVP<T> {
      * из-за этого подгрузка может выполниться 2 раза подряд, добавление данного счетчика поможет избежать такой ситуации
      */
     int preloadingIterations = 0;
-
-    /**
-     *  все данные из источника были получены
-     */
-    Boolean allDataWasObtained = false;
 
     public final int MIN_PRELOAD_SCROLL = 3;
 
@@ -72,9 +64,7 @@ public class LazyLoadingRecyclerViewMVP<T>  extends ActionRecyclerViewMVP<T> {
         //текущая позиция скроллера
         int currentScrollSize = computeVerticalScrollOffset();
 
-        if( (!canScrollVertically(1) || currentScrollSize > totalScrollSize - LOAD_BORDER) && !allDataWasObtained /*&& !loadingInProgress*/ && preloadingIterations > MIN_PRELOAD_SCROLL) {
-
-
+        if( (!canScrollVertically(1) || currentScrollSize > totalScrollSize - LOAD_BORDER) /* && !allDataWasObtained && !loadingInProgress*/ && preloadingIterations > MIN_PRELOAD_SCROLL) {
 
             dataLoading(UpdateMode.ADD);
         }
@@ -83,56 +73,25 @@ public class LazyLoadingRecyclerViewMVP<T>  extends ActionRecyclerViewMVP<T> {
     }
 
 
-    @Override
-    public void onDataSizeChanged() {
-
-        if(adapter.getRealItems()==0)
-            enableEmptyController();
-        else disableEmptyController();
-
-
-        //данные обновились и список сдвинулся -> пробуем подгрузить данные и отменяем ограничение по минимальному порогу прокрутки
-        preloadingIterations = MIN_PRELOAD_SCROLL + 1;
-        onScrollHeightController();
-
-    }
-
 
     @Override
-    public void update(List<T> data, UpdateMode updateMode) {
+    public void updateData(List<T> data, UpdateMode updateMode) {
         preloadingIterations = 0;
-        //проверка - все ли данные отдал поставщик
-        allDataWasObtained = data.size() < presenter.getPageSize();
 
-        if(allDataWasObtained) {
+        if(updateMode == UpdateMode.FINISH) {
             adapter.setDecoration(CommonAdapter.Decoration.SIMPLE);
             adapter.notifyDataSetChanged();
         } else if(adapter.getDecoration()!= CommonAdapter.Decoration.FOOTER)
             adapter.setDecoration(CommonAdapter.Decoration.FOOTER);
 
-        super.update(data,updateMode);
+        super.updateData(data, updateMode);
     }
 
 
-
-    @Override
-    protected void dataLoading(UpdateMode updateMode) {
-
-        if (updateMode == UpdateMode.ADD)
-            presenter.setOffset(adapter.getRealItems());
-        else presenter.setOffset(0);
-
-        super.dataLoading(updateMode);
-    }
 
     @Override
     public void initData() {
         dataLoading(UpdateMode.INITIAL);
-    }
-
-    @Override
-    public void removeAll() {
-        super.removeAll();
     }
 
     public LazyLoadingRecyclerViewMVP(Context context) {
