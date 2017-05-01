@@ -9,28 +9,14 @@ import android.widget.RelativeLayout;
 
 import com.arellomobile.mvp.MvpDelegate;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 
 import ru.belokonalexander.photostory.R;
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchInputData;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP;
-import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 import ru.belokonalexander.photostory.Views.Search.EntitySearchView;
 import ru.belokonalexander.photostory.Views.Search.SearchEntity;
 import ru.belokonalexander.photostory.Views.Search.SearchItem;
-
-
-
-
-import ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP;
-import ru.belokonalexander.photostory.Views.Search.SearchEntity;
 
 /**
  * список с подгрузкой, реализующий функционал поиска
@@ -94,36 +80,40 @@ public class SearchRecyclerViewMVP<T extends SearchEntity> extends LazyLoadingRe
 
             SearchProvider provider = (SearchProvider) presenter.getProvider();
 
-            if (SearchItem.getSearchFieldsCount(provider.getItemType()) > 0 && searchView==null) {
+            if (SearchItem.getSearchFieldsCount(provider.getItemType()) > 0) {
 
-                LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                searchFieldController = (ViewGroup) layoutInflater.inflate(R.layout.item_search, null);
-                ViewGroup parent = (ViewGroup) getParent();
+                if(searchView==null) {
+                    LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    searchFieldController = (ViewGroup) layoutInflater.inflate(R.layout.item_search, null);
+                    ViewGroup parent = (ViewGroup) getParent();
 
 
-                parent.addView(searchFieldController);
-                RelativeLayout.LayoutParams newParams = (RelativeLayout.LayoutParams) getLayoutParams();
-                newParams.addRule(RelativeLayout.BELOW, searchFieldController.getId());
+                    parent.addView(searchFieldController);
+                    RelativeLayout.LayoutParams newParams = (RelativeLayout.LayoutParams) getLayoutParams();
+                    newParams.addRule(RelativeLayout.BELOW, searchFieldController.getId());
 
-                searchView = (EntitySearchView) searchFieldController.findViewById(R.id.search_view);
+                    searchView = (EntitySearchView) searchFieldController.findViewById(R.id.search_view);
 
-                searchView.initSearch(provider.getItemType());
+                    searchView.initSearch(provider.getItemType());
 
-                searchView.setSearchTask(new EntitySearchView.SearchTask() {
-                    @Override
-                    public void startSearch(SearchInputData data) {
-                        provider.update(data);
-                        dataLoading(UpdateMode.REWRITE);
-                    }
+                    searchView.setSearchTask(new EntitySearchView.SearchTask() {
+                        @Override
+                        public void startSearch(SearchInputData data) {
+                            provider.update(data);
+                            dataLoading(UpdateMode.REWRITE);
+                        }
 
-                    @Override
-                    public void startEmpty(SearchInputData data) {
-                        provider.update(data);
-                        dataLoading(UpdateMode.REWRITE);
-                    }
-                });
+                        @Override
+                        public void startEmpty(SearchInputData data) {
+                            provider.update(data);
+                            dataLoading(UpdateMode.REWRITE);
+                        }
+                    });
+                } else
+                    searchView.setKeyPosition(provider.getFilterKey());
 
             }
+
         }
 
 

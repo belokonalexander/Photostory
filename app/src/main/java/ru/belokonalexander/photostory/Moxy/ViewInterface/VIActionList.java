@@ -1,16 +1,13 @@
 package ru.belokonalexander.photostory.Moxy.ViewInterface;
 
 import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
-import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.List;
 
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
+import ru.belokonalexander.photostory.Views.Recyclers.MVP.UpdateMode;
 
 /**
  * Created by Alexander on 25.04.2017.

@@ -11,7 +11,6 @@ import java.util.List;
 
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
 
 /**

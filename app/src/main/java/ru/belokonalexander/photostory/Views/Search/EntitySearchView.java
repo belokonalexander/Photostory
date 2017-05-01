@@ -30,11 +30,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import ru.belokonalexander.photostory.App;
-import ru.belokonalexander.photostory.Helpers.Settings;
 import ru.belokonalexander.photostory.Helpers.StaticUtils;
 import ru.belokonalexander.photostory.R;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchInputData;
@@ -153,6 +149,8 @@ public class EntitySearchView extends android.support.v7.widget.SearchView {
         this.initSegmentController();
 
     }
+
+
 
     /**
      * инициализация элемента с заданными настройками
@@ -319,6 +317,20 @@ public class EntitySearchView extends android.support.v7.widget.SearchView {
         return searchParams.get(keyPosition);
     }
 
+    public void setKeyPosition(String state){
+
+        int index = 0;
+
+        for(int i =0; i < searchParams.size(); i++){
+            if(searchParams.get(i).getName().equals(state)){
+                index = i;
+                break;
+            }
+        }
+
+        onChangeSearchParameter(index);
+
+    }
 
     public void onChangeSearchParameter(int index)
     {

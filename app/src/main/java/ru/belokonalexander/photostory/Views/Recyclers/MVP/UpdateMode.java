@@ -1,4 +1,4 @@
-package ru.belokonalexander.photostory.Views.Recyclers;
+package ru.belokonalexander.photostory.Views.Recyclers.MVP;
 
 /**
  * режим обновления для ActionRecyclerView

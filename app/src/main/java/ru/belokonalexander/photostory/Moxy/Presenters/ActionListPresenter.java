@@ -1,7 +1,6 @@
 package ru.belokonalexander.photostory.Moxy.Presenters;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -14,7 +13,7 @@ import ru.belokonalexander.photostory.Moxy.ViewInterface.VIActionList;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
+import ru.belokonalexander.photostory.Views.Recyclers.MVP.UpdateMode;
 
 /**
  * Created by Alexander on 25.04.2017.
@@ -61,7 +60,6 @@ public class ActionListPresenter extends MvpPresenter<VIActionList> {
             allDataWasObtaining = false;
 
         if(updateMode!=UpdateMode.ADD && lastTask!=null) {
-            Log.e("TAG", "Прервали");
             lastTask.interrupt();
         }
 

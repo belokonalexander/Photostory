@@ -17,7 +17,8 @@ public class Topic implements Serializable, SearchEntity {
     @SearchField(lazySearch = true, alias = R.string.empty_data, order = 2)
     String title;
 
-
+    @SearchField(lazySearch = true, alias = R.string.app_name, order = 2)
+    String title2;
 
     Long id;
 

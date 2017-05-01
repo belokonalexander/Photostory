@@ -18,7 +18,6 @@ import ru.belokonalexander.photostory.Moxy.ViewInterface.VIActionList;
 import ru.belokonalexander.photostory.R;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.UpdateMode;
 
 /**
  * Created by Alexander on 25.04.2017.
