@@ -17,7 +17,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/default_list_height"
-            style="@style/ClickableItem"
+            android:background="@color/white"
             android:paddingLeft="@dimen/icon_padding"
             android:paddingRight="@dimen/icon_padding"
             >

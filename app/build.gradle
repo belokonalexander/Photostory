@@ -43,6 +43,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.0'
 
 
+    //header footer layout
+    //compile 'com.liucanwen.app:headerfooterrecyclerview:1.0.0'
 
     testCompile 'junit:junit:4.12'
 

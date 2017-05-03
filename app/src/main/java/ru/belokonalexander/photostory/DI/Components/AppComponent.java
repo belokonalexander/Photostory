@@ -10,8 +10,7 @@ import ru.belokonalexander.photostory.DI.Modules.FragmentsModule;
 
 import ru.belokonalexander.photostory.ListTopicsFragment;
 import ru.belokonalexander.photostory.MainActivity;
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
-import ru.belokonalexander.photostory.Views.Search.EntitySearchView;
+
 
 /**
  * Created by Alexander on 22.04.2017.

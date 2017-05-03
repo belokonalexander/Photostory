@@ -7,7 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.MVP.UpdateMode;
+
 
 /**
  * Created by Alexander on 25.04.2017.
@@ -16,7 +16,7 @@ import ru.belokonalexander.photostory.Views.Recyclers.MVP.UpdateMode;
 public interface VIActionList<T> extends MvpView {
 
    /* @StateStrategyType(value = AddToEndSingleStrategy.class)*/
-    void updateData(List<T> data, UpdateMode updateMode);
+    void updateData(List<T> data);
 
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "showControllerState")
     void enableEmptyController();

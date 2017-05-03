@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +28,7 @@ import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchInputData;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SearchProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.SolidProvider;
-import ru.belokonalexander.photostory.Views.Recyclers.MVP.ActionRecyclerViewMVP;
-import ru.belokonalexander.photostory.Views.Recyclers.MVP.LazyLoadingRecyclerViewMVP;
-import ru.belokonalexander.photostory.Views.Recyclers.MVP.SearchRecyclerViewMVP;
+
 
 
 /**
@@ -54,7 +48,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
-    SearchRecyclerViewMVP<Topic> topicsRecycler;
+    RecyclerView topicsRecycler;
     TopicAdapter adapter;
 
     @Nullable
@@ -73,25 +67,24 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
         topicsRecycler.setLayoutManager(lm);
 
-        topicsRecycler.init(TopicAdapter.class, new SearchProvider<>(Topic.class, new PaginationProvider.PaginationProviderController<Topic>() {
-            @Override
-            public List<Topic> getData(PaginationSlider state) {
 
-               return new ArrayList<Topic>();
+        List<Topic> topics = new ArrayList<>();
+        for(int i =0; i < 15; i++){
+            topics.add(new Topic((long)i));
+        }
 
-            }
-        }), getMvpDelegate());
-
-        topicsRecycler.setOnItemClickListener(new CommonAdapter.OnClickListener<Topic>() {
+        TopicAdapter adapter = new TopicAdapter();
+        adapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
             @Override
             public void onClick(Topic item) {
-                Log.e("TAG", " ------ " + topicsRecycler.presenter.getProvider());
+
             }
         });
-
+        adapter.setData(topics);
+        topicsRecycler.setAdapter(adapter);
 
         if(savedInstanceState==null){
-            topicsRecycler.initData();
+            //topicsRecycler.initData();
         }
 
 
@@ -101,7 +94,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
     public void addNewTopic(Topic topic){
 
-        topicsRecycler.addItem(topic);
+        //topicsRecycler.addItem(topic);
     }
 
 

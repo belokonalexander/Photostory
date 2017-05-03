@@ -10,7 +10,6 @@ import java.util.List;
 
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
-import ru.belokonalexander.photostory.Views.Recyclers.DataProviders.PaginationSlider;
 
 /**
  * Created by Alexander on 22.04.2017.
