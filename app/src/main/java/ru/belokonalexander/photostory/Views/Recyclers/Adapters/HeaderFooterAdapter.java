@@ -142,6 +142,9 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
         int shift = 0;
         if(headerIsEnabled)
             shift++;
+       if(footerIsEnabled)
+            shift++;
+
 
         notifyItemRangeInserted(positionStart+shift, itemCount);
         //notifyDataSetChanged();

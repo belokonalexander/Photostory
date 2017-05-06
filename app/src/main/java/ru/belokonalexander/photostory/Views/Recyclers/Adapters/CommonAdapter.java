@@ -25,7 +25,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
     }
 
     public final void addData(List<T> part){
-        int was = data.size()+1;
+        int was = data.size();
         data.addAll(part);
         notifyDataItemRangeInserted(was,part.size());
     }
