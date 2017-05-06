@@ -10,7 +10,6 @@ import java.io.Serializable;
 public class Topic implements Serializable {
 
 
-
     String title;
 
     String title2;

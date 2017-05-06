@@ -10,5 +10,6 @@ import android.view.View;
 public class DefaultFooter extends RecyclerView.ViewHolder {
     public DefaultFooter(View itemView) {
         super(itemView);
+        //itemView.getLayoutParams().height = 0;
     }
 }

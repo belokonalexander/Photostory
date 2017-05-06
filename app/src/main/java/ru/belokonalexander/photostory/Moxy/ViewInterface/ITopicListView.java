@@ -8,6 +8,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
 import ru.belokonalexander.photostory.Models.Topic;
+import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 
 
 /**
@@ -20,5 +21,6 @@ public interface ITopicListView extends MvpView {
     @StateStrategyType(value = SkipStrategy.class)
     void showTopic(Topic topic);
 
+    void showNextPart(List<Topic> data, TopicListPresenter.UpdateMode mode);
 
 }

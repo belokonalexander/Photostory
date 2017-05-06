@@ -1,49 +1,41 @@
 package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
 
-import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
- *  обобщенный адаптер
+ * Created by Alexander on 05.05.2017.
  */
 
 public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<T> data;
 
-    abstract  RecyclerView.ViewHolder onCreateVH(ViewGroup parent, int viewType);
-    abstract  void onBindVH(RecyclerView.ViewHolder holder, int position);
+    OnClickListener<T> onClickListener;
 
-    public void setData(List<T> data) {
-        this.data = data;
-        Log.e("TAG", "LIST: " + data.size());
+    public interface OnClickListener<T>{
+        void onClick(T item);
     }
 
-
-    CommonAdapter() {
-
+    public CommonAdapter() {
+        data = new ArrayList<>();
     }
 
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return onCreateVH(parent, viewType);
+    public void addData(List<T> part){
+        int was = data.size();
+        data.addAll(part);
+        notifyDataItemRangeInserted(was,part.size());
     }
 
+    public void notifyDataItemRangeInserted(int positionStart, int itemCount){
+        notifyItemRangeInserted(positionStart, itemCount);
+    }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            onBindVH(holder, position);
+    public void setOnClickListener(OnClickListener<T> onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -51,17 +43,28 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
         return data.size();
     }
 
-    OnClickListener<T> onClickListener;
-
-    public void setOnClickListener(OnClickListener<T> onClickListener) {
-        this.onClickListener = onClickListener;
-    }
-    public interface OnClickListener<T>{
-        void onClick(T item);
+    public T getItem(int position){
+        return data.get(position);
     }
 
-    T getItem(int pos){
-        return data.get(pos);
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return onCreateVH(parent,viewType);
     }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        onBindVH(holder,position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return getItemType(position);
+    }
+
+    abstract void onBindVH(RecyclerView.ViewHolder holder, int position);
+    abstract RecyclerView.ViewHolder onCreateVH(ViewGroup parent, int viewType);
+    abstract int getItemType(int position);
+
 
 }

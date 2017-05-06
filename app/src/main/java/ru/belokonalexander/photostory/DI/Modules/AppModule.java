@@ -32,11 +32,13 @@ public class AppModule {
     }
 
 
+/*
     @Provides
     @Singleton
     Logger provideLogger(){
         return new Logger();
     }
+*/
 
     @Provides
     @Singleton

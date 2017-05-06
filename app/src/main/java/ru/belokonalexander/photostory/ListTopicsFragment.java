@@ -1,14 +1,16 @@
 package ru.belokonalexander.photostory;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -27,8 +29,9 @@ import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
+import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
 
 
 /**
@@ -40,22 +43,23 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     @InjectPresenter
     TopicListPresenter presenter;
 
-    @Inject
-    Logger logger;
-
 
 
     public final String IS_RECYCLER_DATA = "RECYCLER_DATA";
 
     @BindView(R.id.topics_recycler)
-    RecyclerView topicsRecycler;
-    TopicAdapter adapter;
+    LazyLoadingRecycler topicsRecycler;
+
+
+    TopicAdapter topicAdapter;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_topic_list,container,false);
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -68,23 +72,38 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         topicsRecycler.setLayoutManager(lm);
 
 
-        List<Topic> topics = new ArrayList<>();
-        for(int i =0; i < 15; i++){
-            topics.add(new Topic((long)i));
-        }
+        topicAdapter = new TopicAdapter();
 
-        TopicAdapter adapter = new TopicAdapter();
-        adapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                topicAdapter.setHeaderView(new TextView(getContext()));
+            }
+        }, 1000);
+
+
+        topicAdapter.setFooterView(new ProgressBar(getContext()));
+
+        topicAdapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
             @Override
             public void onClick(Topic item) {
-
+                Log.e("TAG", "CLICK: " + item.getTitle());
             }
         });
-        adapter.setData(topics);
-        topicsRecycler.setAdapter(adapter);
+
+
+
+        topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart());
+
+
+
+
+        topicsRecycler.setAdapter(topicAdapter);
+
 
         if(savedInstanceState==null){
-            //topicsRecycler.initData();
+            topicsRecycler.unlockLazyLoading();
         }
 
 
@@ -108,6 +127,27 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         //делегируем обработку активити
         //т.к dual pane и может придется заполнят второй фрагмент
         ((ITopicListView)getActivity()).showTopic(topic);
+    }
+
+    @Override
+    public void showNextPart(List<Topic> data, TopicListPresenter.UpdateMode updateMode) {
+        topicAdapter.addData(data);
+
+        switch (updateMode){
+            case UPDATE:
+                topicsRecycler.unlockLazyLoading();
+                break;
+            case FINISH:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        topicAdapter.hideFooter();
+                    }
+                }, 1000);
+                break;
+        }
+
+
     }
 
 

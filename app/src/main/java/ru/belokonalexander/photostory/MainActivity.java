@@ -12,6 +12,8 @@ import android.view.View;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -23,14 +25,12 @@ import ru.belokonalexander.photostory.Moxy.Presenters.MainActivityPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.IMainActivityView;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
-public class MainActivity extends MvpAppCompatActivity implements ITopicListView, IMainActivityView {
+public class MainActivity extends MvpAppCompatActivity implements IMainActivityView {
 
 
     @InjectPresenter
     MainActivityPresenter presenter;
 
-    @Inject
-    Logger logger;
 
     @Inject
     Settings settings;
@@ -61,7 +61,7 @@ public class MainActivity extends MvpAppCompatActivity implements ITopicListView
     }
 
 
-    @Override
+
     public void showTopic(Topic topic) {
         ContentTopicFragment contentTopicFragment = (ContentTopicFragment)getSupportFragmentManager().findFragmentById(R.id.topic_content);
 
@@ -75,6 +75,8 @@ public class MainActivity extends MvpAppCompatActivity implements ITopicListView
             contentTopicFragment.updateContent(topic);
         }
     }
+
+
 
     @Override
     public void createTopic(int code) {
@@ -93,13 +95,13 @@ public class MainActivity extends MvpAppCompatActivity implements ITopicListView
     @Override
     protected void onStart() {
         super.onStart();
-        logger.logThis(" ON START ");
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        logger.logThis(" ON RESUME ");
+
     }
 
     @Override

@@ -9,9 +9,9 @@ import android.widget.Toast;
 
 public class Logger {
 
-    private final String main = "TAG";
+    private static final String main = "TAG";
 
-    public void logThis(Object str){
+    public static void logThis(Object str){
         Log.e(main, "--> " + str);
     };
 

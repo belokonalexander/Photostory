@@ -39,10 +39,18 @@ public class SimpleAsyncTask<T> {
         };
     }
 
+    /**
+     * выполняется или уже выполнено
+     * @return
+     */
     public boolean isExecuted() {
         return backgroundTaskWrapper.getStatus()!= AsyncTask.Status.PENDING;
     }
 
+    /**
+     * выполняется в данный момент
+     * @return
+     */
     public boolean isRunning(){
         return !backgroundTaskWrapper.isCancelled() && backgroundTaskWrapper.getStatus()== AsyncTask.Status.RUNNING ;
     }

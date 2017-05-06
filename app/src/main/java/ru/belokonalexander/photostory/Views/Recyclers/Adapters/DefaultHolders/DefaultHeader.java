@@ -10,5 +10,6 @@ import android.view.View;
 public class DefaultHeader extends RecyclerView.ViewHolder {
     public DefaultHeader(View itemView) {
         super(itemView);
+        //itemView.getLayoutParams().height = 0;
     }
 }
