@@ -52,7 +52,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
 
     TopicAdapter topicAdapter;
-
+    LinearLayoutManager lm;
 
     @Nullable
     @Override
@@ -67,7 +67,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         ButterKnife.bind(this, view);
         App.getAppComponent().inject(this);
 
-        LinearLayoutManager lm = new LinearLayoutManager(getContext());
+        lm = new LinearLayoutManager(getContext());
 
         topicsRecycler.setLayoutManager(lm);
 
@@ -75,15 +75,10 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         topicAdapter = new TopicAdapter();
 
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                topicAdapter.setHeaderView(new TextView(getContext()));
-            }
-        }, 1000);
-
-
         topicAdapter.setFooterView(new ProgressBar(getContext()));
+        topicAdapter.setHeaderView(new TextView(getContext()));
+
+
 
         topicAdapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
             @Override
@@ -95,15 +90,11 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
 
         topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart());
-
-
-
-
         topicsRecycler.setAdapter(topicAdapter);
 
 
         if(savedInstanceState==null){
-            topicsRecycler.unlockLazyLoading();
+            topicsRecycler.loadData();
         }
 
 
@@ -138,12 +129,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
                 topicsRecycler.unlockLazyLoading();
                 break;
             case FINISH:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        topicAdapter.hideFooter();
-                    }
-                }, 1000);
+                //lm.scrollToPosition(0);
+                topicAdapter.hideFooter();
                 break;
         }
 

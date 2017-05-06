@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.DefaultHolders.DefaultFooter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.DefaultHolders.DefaultHeader;
 
@@ -65,8 +66,9 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
      */
     public void hideHeader(){
         if(headerView!=null && headerIsEnabled) {
-            notifyItemRemoved(getHeaderPosition());
+            int pos = getHeaderPosition();
             headerIsEnabled = false;
+            notifyItemRemoved(pos);
         }
     }
 
@@ -75,25 +77,25 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
      */
     public void showHeader(){
         if(headerView!=null && !headerIsEnabled) {
-
-            notifyItemInserted(getHeaderPosition());
             headerIsEnabled = true;
+            notifyItemInserted(getHeaderPosition());
         }
     }
 
     public void hideFooter(){
         if(footerView!=null && footerIsEnabled) {
-
-            notifyItemRemoved(getFooterPosition());
+            int pos = getFooterPosition();
             footerIsEnabled = false;
+            notifyItemRemoved(pos);
+
         }
     }
 
     public void showFooter(){
         if(footerView!=null && !footerIsEnabled) {
-
-            notifyItemInserted(getFooterPosition());
             footerIsEnabled = true;
+            notifyItemInserted(getFooterPosition());
+
         }
     }
 
@@ -142,6 +144,7 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
             shift++;
 
         notifyItemRangeInserted(positionStart+shift, itemCount);
+        //notifyDataSetChanged();
     };
 
     /*@Override

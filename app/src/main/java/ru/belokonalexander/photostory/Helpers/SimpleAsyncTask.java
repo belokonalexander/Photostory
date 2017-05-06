@@ -73,6 +73,21 @@ public class SimpleAsyncTask<T> {
         return s;
     }
 
+    public static<S> SimpleAsyncTask createDelayed(PostExecute<S> postExecute, int delay){
+
+        InBackground<S> inBackground = () -> {
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        };
+
+        SimpleAsyncTask s = new SimpleAsyncTask<>(inBackground, postExecute);
+        return s;
+    }
+
     public static<S> SimpleAsyncTask run(InBackground<S> inBackgroundTask){
         SimpleAsyncTask s = new SimpleAsyncTask<S>(inBackgroundTask, null);
         s.execute();
@@ -83,7 +98,7 @@ public class SimpleAsyncTask<T> {
 
 
     public void execute(){
-        backgroundTaskWrapper.execute();
+        backgroundTaskWrapper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public interface InBackground<T>{

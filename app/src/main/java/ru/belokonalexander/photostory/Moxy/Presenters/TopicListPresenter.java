@@ -27,8 +27,8 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
     boolean allDataWasObtaining = false;
 
-    final int tmp_DataSize = 40;
-    final int tmp_PartSize = 3;
+    final int tmp_DataSize = 50;
+    final int tmp_PartSize = 12;
 
     SimpleAsyncTask partLoadingTask;
 
@@ -53,7 +53,7 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
                 Logger.logThis(" Подгружаем ");
 
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

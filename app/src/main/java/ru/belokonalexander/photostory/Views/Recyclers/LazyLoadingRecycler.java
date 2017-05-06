@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import ru.belokonalexander.photostory.Helpers.Logger;
+
 /**
  * Created by Alexander on 06.05.2017.
  */
@@ -14,6 +16,7 @@ import android.util.AttributeSet;
 public class LazyLoadingRecycler extends RecyclerView {
 
     private double LOAD_BORDER = 0; //px - количество пикселов до конца списка, перед началом подгрузкой
+
 
     /**
      * иногда при быстрой прокрутке, после загрузки данных, скроллер продолжает находиться в старом состоянии (как перед загрузкой)
@@ -86,8 +89,9 @@ public class LazyLoadingRecycler extends RecyclerView {
         //текущая позиция скроллера - OFFSET
         int currentScrollOffset = computeVerticalScrollOffset();
 
-        //ОТСТУП СКРОЛЛЕРА + РАЗМЕР ЭКРАНА > МАКСИМАЛЬНАЯ ВЫСОТА - ОТСТУП ПОДГРУЗКИ
-        boolean needToLoadNewData = currentScrollOffset + getHeight() > totalScrollSize - LOAD_BORDER;
+        //ОТСТУП СКРОЛЛЕРА + РАЗМЕР ЭКРАНА (ПО БОЛЬШЕЙ СТОРОНЕ ЭКРАНА) > МАКСИМАЛЬНАЯ ВЫСОТА - ОТСТУП ПОДГРУЗКИ
+        boolean needToLoadNewData = currentScrollOffset + Math.max(getHeight(),getWidth()) > totalScrollSize - LOAD_BORDER;
+        //Logger.logThis("scroll: " + (currentScrollOffset + getHeight()) + " / "  +  (totalScrollSize - LOAD_BORDER) + " / ---- " + totalScrollSize + " - " + computeVerticalScrollExtent());
 
 
         if( (!canScrollVertically(1) || needToLoadNewData) && !loadingIsDisable) {
@@ -103,7 +107,7 @@ public class LazyLoadingRecycler extends RecyclerView {
     OnGetDataListener onGetDataListener;
 
 
-    private void loadData(){
+    public void loadData(){
         lockLazyLoading();
         onGetDataListener.getData();
     }
@@ -114,8 +118,7 @@ public class LazyLoadingRecycler extends RecyclerView {
 
     public void unlockLazyLoading(){
         loadingIsDisable = false;
-        //проверяем подгрузку по скроллу
-        onScrollHeightController();
+
     }
 
     public void setOnGetDataListener(OnGetDataListener onGetDataListener) {
