@@ -46,6 +46,8 @@ dependencies {
     //header footer layout
     //compile 'com.liucanwen.app:headerfooterrecyclerview:1.0.0'
 
+    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+
     testCompile 'junit:junit:4.12'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

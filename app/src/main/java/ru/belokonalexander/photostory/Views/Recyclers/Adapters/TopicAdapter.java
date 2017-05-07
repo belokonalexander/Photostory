@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.R;
 
@@ -61,6 +62,7 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
                         int position = getAdapterPosition();
 
                         if(position!=NO_POSITION)
+                            Logger.logThis(" Position:  " + getAdapterPosition() + " / " + getLayoutPosition());
                             onClickListener.onClick(getItem(position));
                     }
                 });

@@ -23,6 +23,16 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.FlipInBottomXAnimator;
+import jp.wasabeef.recyclerview.animators.FlipInLeftYAnimator;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Helpers.SimpleAsyncTask;
 import ru.belokonalexander.photostory.Models.Topic;
@@ -75,10 +85,22 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         topicAdapter = new TopicAdapter();
 
 
-        topicAdapter.setFooterView(new ProgressBar(getContext()));
+        //topicAdapter.setFooterView(new ProgressBar(getContext()));
         topicAdapter.setHeaderView(new TextView(getContext()));
+        topicsRecycler.setItemAnimator(new SlideInUpAnimator());
 
+        //topicsRecycler.getItemAnimator().setAddDuration(2000);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                List<Topic> arra= new ArrayList<Topic>();
+                for(int i =0; i < 5; i++){
+                    arra.add(new Topic((long) i * 12));
+                }
+                topicAdapter.addToTop(arra);
+            }
+        }, 3000);
 
         topicAdapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
             @Override

@@ -142,22 +142,17 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
         int shift = 0;
         if(headerIsEnabled)
             shift++;
-       if(footerIsEnabled)
-            shift++;
 
+       /*if(footerIsEnabled)
+            shift++;*/
 
-        notifyItemRangeInserted(positionStart+shift, itemCount);
-        //notifyDataSetChanged();
+        //Logger.logThis(" Обновляю с позиции: " + positionStart + " / " + itemCount);
+
+        if(itemCount>1)
+            notifyItemRangeInserted(positionStart+shift, itemCount);
+        else notifyItemInserted(positionStart+shift);
+
     };
-
-    /*@Override
-    public void addData(List<T> part) {
-        int was = data.size();
-
-    }*/
-
-    //TODO notify data override
-
 
 
     @Override

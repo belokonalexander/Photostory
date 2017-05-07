@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.belokonalexander.photostory.Helpers.Logger;
+
 /**
  * Created by Alexander on 05.05.2017.
  */
@@ -25,13 +27,29 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
     }
 
     public final void addData(List<T> part){
-        int was = data.size();
+        int was = data.size()+1;
         data.addAll(part);
         notifyDataItemRangeInserted(was,part.size());
     }
 
+    public final void addToTop(List<T> part){
+        data.addAll(0, part);
+        notifyDataItemRangeInserted(0, part.size());
+    }
+
+    public final void addToTop(T item){
+        data.add(0, item);
+        notifyDataItemRangeInserted(0, 1);
+    }
+
     public void notifyDataItemRangeInserted(int positionStart, int itemCount){
-        notifyItemRangeInserted(positionStart, itemCount);
+
+        Logger.logThis(" Обновляю с позиции: " + positionStart + " / " + itemCount);
+
+
+        if(itemCount>1)
+            notifyItemRangeInserted(positionStart, itemCount);
+        else notifyItemInserted(positionStart);
     }
 
     public void setOnClickListener(OnClickListener<T> onClickListener) {
