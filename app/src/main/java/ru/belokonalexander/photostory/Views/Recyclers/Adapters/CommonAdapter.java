@@ -3,6 +3,8 @@ package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.MvpDelegate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
 
     List<T> data;
 
+    MvpDelegate parentDelegate;
+
     OnClickListener<T> onClickListener;
 
     public interface OnClickListener<T>{
@@ -24,6 +28,19 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
 
     public CommonAdapter() {
         data = new ArrayList<>();
+    }
+
+    public CommonAdapter(MvpDelegate delegate) {
+        this();
+        parentDelegate = delegate;
+    }
+
+    public MvpDelegate getParentDelegate() {
+        return parentDelegate;
+    }
+
+    public void setParentDelegate(MvpDelegate parentDelegate) {
+        this.parentDelegate = parentDelegate;
     }
 
     public final void addData(List<T> part){

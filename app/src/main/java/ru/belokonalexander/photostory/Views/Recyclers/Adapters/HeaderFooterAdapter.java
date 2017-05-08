@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.MvpDelegate;
+
 import java.util.List;
 
 import ru.belokonalexander.photostory.Helpers.Logger;
@@ -19,6 +21,10 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
 
     private final int FOOTER = 101;
     private final int HEADER = 102;
+
+    public HeaderFooterAdapter(MvpDelegate delegate) {
+        super(delegate);
+    }
 
     //прианаччен ли адаптер к ресайклу
     private boolean attached = false;

@@ -27,8 +27,8 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
     boolean allDataWasObtaining = false;
 
-    final int tmp_DataSize = 23;
-    final int tmp_PartSize = 12;
+    final int tmp_DataSize = 100;
+    final int tmp_PartSize = 20;
 
     SimpleAsyncTask partLoadingTask;
 
