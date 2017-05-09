@@ -6,9 +6,9 @@ package ru.belokonalexander.photostory.Views.Recyclers;
 
 public class ProviderInfo {
 
-    UpdateMode inputUpdateMode;
+    private UpdateMode inputUpdateMode;
 
-    boolean allDataWasObtained = false;
+    private boolean allDataWasObtained = false;
 
     public UpdateMode getInputUpdateMode() {
         return inputUpdateMode;

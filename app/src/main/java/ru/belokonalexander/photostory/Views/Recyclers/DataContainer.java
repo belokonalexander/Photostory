@@ -11,20 +11,18 @@ import ru.belokonalexander.photostory.Models.Topic;
 
 public class DataContainer<T> {
 
-    List<T> data;
+    private List<T> data;
 
     private boolean allDataWasObtaining = false;
-    //ProviderInfo providerInfo = new ProviderInfo();
 
-    int pageSize = 20;
-
-    //UpdateMode inputOperation;
+    private int pageSize = 20;
 
     public DataContainer() {
         data = new ArrayList<T>();
+        //this.pageSize = pageSize;
     }
 
-    public DataContainer(DataContainer<T> realState) {
+    private DataContainer(DataContainer<T> realState) {
         data = realState.getData();
         pageSize = realState.getPageSize();
         allDataWasObtaining = realState.allDataWasObtaining;
@@ -69,6 +67,6 @@ public class DataContainer<T> {
 
 
     public static<T> DataContainer<T>  cloneState(DataContainer<T> realState) {
-        return new DataContainer<T>(realState);
+        return new DataContainer<>(realState);
     }
 }
