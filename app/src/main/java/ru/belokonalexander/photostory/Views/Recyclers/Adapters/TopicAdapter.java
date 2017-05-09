@@ -93,7 +93,9 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
         @Override
         protected void bindView(Topic model) {
             titleTextView.setText(" -> " + topic.getTitle());
-            cv.setOnClickListener(v -> getPresenter().startTask());
+            cv.setOnClickListener(v -> {
+                getPresenter().startTask();
+            });
             progressBar.setProgress(0);
         }
 

@@ -26,8 +26,11 @@ public class TopicItemPresenter extends MvpPresenter<ITopicView> {
 
     static int count = 0;
 
+    Topic topic;
+
     public TopicItemPresenter(Topic topic) {
         Logger.logThis(" Иниуиализация презентера: " + ++count);
+        this.topic = topic;
     }
 
     public void startTask(){
@@ -41,5 +44,9 @@ public class TopicItemPresenter extends MvpPresenter<ITopicView> {
                     }
                 });
 
+    }
+
+    public void onClick() {
+        Logger.logThis(" Click: " + topic.getTitle());
     }
 }

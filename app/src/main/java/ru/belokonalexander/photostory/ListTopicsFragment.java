@@ -80,26 +80,10 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
         topicsRecycler.setLayoutManager(lm);
 
-
         topicAdapter = new TopicAdapter(getMvpDelegate());
-
 
         topicAdapter.setFooterView(new ProgressBar(getContext()));
         topicAdapter.setHeaderView(new TextView(getContext()));
-        //topicsRecycler.setItemAnimator(new SlideInUpAnimator());
-        //topicsRecycler.setNestedScrollingEnabled(false);
-        //topicsRecycler.getItemAnimator().setAddDuration(22000);
-
-
-        //topicsRecycler.getItemAnimator().setAddDuration(2000);
-
-
-        topicAdapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
-            @Override
-            public void onClick(Topic item) {
-                Log.e("TAG", "CLICK: " + item.getTitle());
-            }
-        });
 
 
         topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart(ProviderInfo.UpdateMode.UPDATE));
@@ -110,8 +94,6 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         if(savedInstanceState==null){
             topicsRecycler.loadData();
         }
-
-
 
     }
 
@@ -130,7 +112,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     @Override
     public void showTopic(Topic topic) {
         //делегируем обработку активити
-        //т.к dual pane и может придется заполнят второй фрагмент
+        //т.к dual pane и может придется заполнять второй фрагмент
         ((ITopicListView)getActivity()).showTopic(topic);
     }
 
@@ -139,10 +121,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     @Override
     public void showNextPart(List<Topic> data, ProviderInfo updateMode) {
 
-        Logger.logThis(" Обновили: " + updateMode.getInputUpdateMode());
-
-
-        switch (updateMode.getInputUpdateMode()){
+         switch (updateMode.getInputUpdateMode()){
             case REWRITE:
                 topicAdapter.rewriteData(data);
                 topicsRecycler.unlockRefreshLoading();
@@ -160,38 +139,6 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
             topicAdapter.showFooter();
         }
 
-        /*if(updateMode.getInputUpdateMode()== ProviderInfo.UpdateMode.UPDATE) {
-            topicAdapter.addData(data);
-            if(updateMode.isAllDataWasObtained()){
-                topicAdapter.hideFooter();
-            } else
-                topicsRecycler.unlockRefreshLoading();
-        } else if (updateMode.getInputUpdateMode()== ProviderInfo.UpdateMode.REWRITE) {
-            topicAdapter.rewriteData(data);
-            if(updateMode.isAllDataWasObtained()){
-                topicAdapter.hideFooter();
-            } else {
-                topicsRecycler.unlockRefreshLoading();
-
-            }
-        }*/
-
-      /*
-        switch (updateMode){
-            case UPDATE:
-                topicAdapter.addData(data);
-                topicsRecycler.unlockLazyLoading();
-                break;
-            case FINISH:
-                topicAdapter.addData(data);
-                topicAdapter.hideFooter();
-                break;
-            case REWRITE:
-                topicAdapter.rewriteData(data);
-                topicsRecycler.unlockRefreshLoading();
-                topicAdapter.showFooter();
-                break;
-        }*/
 
 
     }
