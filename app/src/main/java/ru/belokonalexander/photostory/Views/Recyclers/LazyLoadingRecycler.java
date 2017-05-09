@@ -120,7 +120,6 @@ public class LazyLoadingRecycler extends RecyclerView {
 
     public void unlockLazyLoading(){
         loadingIsDisable = false;
-
     }
 
     public void unlockRefreshLoading(){

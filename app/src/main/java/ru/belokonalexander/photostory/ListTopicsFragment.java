@@ -38,7 +38,9 @@ import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
+import ru.belokonalexander.photostory.Views.Recyclers.DataContainer;
 import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
+import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 
 
 /**
@@ -92,7 +94,6 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         //topicsRecycler.getItemAnimator().setAddDuration(2000);
 
 
-
         topicAdapter.setOnClickListener(new CommonAdapter.OnClickListener<Topic>() {
             @Override
             public void onClick(Topic item) {
@@ -101,27 +102,10 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         });
 
 
-
-
-        topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart());
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                topicsRecycler.setOnRefreshListener(new LazyLoadingRecycler.RefreshDataListener() {
-            @Override
-            public void onRefresh() {
-                Toast.makeText(getContext()," Test ", Toast.LENGTH_SHORT).show();
-                topicsRecycler.unlockRefreshLoading();
-            }
-        });
-            }
-        }, 2000);
-
-        //SlideInBottomAnimationAdapter alphaAdapter = new SlideInBottomAnimationAdapter(topicAdapter);
+        topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart(ProviderInfo.UpdateMode.UPDATE));
+        topicsRecycler.setOnRefreshListener(() -> presenter.loadNextPart(ProviderInfo.UpdateMode.REWRITE));
 
         topicsRecycler.setAdapter(topicAdapter);
-
 
         if(savedInstanceState==null){
             topicsRecycler.loadData();
@@ -150,21 +134,64 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         ((ITopicListView)getActivity()).showTopic(topic);
     }
 
+
+
     @Override
-    public void showNextPart(List<Topic> data, TopicListPresenter.UpdateMode updateMode) {
-        topicAdapter.addData(data);
+    public void showNextPart(List<Topic> data, ProviderInfo updateMode) {
 
-        Logger.logThis(" RESTORE?" + presenter.isInRestoreState(this));
+        Logger.logThis(" Обновили: " + updateMode.getInputUpdateMode());
 
+
+        switch (updateMode.getInputUpdateMode()){
+            case REWRITE:
+                topicAdapter.rewriteData(data);
+                topicsRecycler.unlockRefreshLoading();
+                break;
+            case UPDATE:
+                topicAdapter.addData(data);
+                break;
+        }
+
+        if(updateMode.isAllDataWasObtained()){
+            topicsRecycler.lockLazyLoading();
+            topicAdapter.hideFooter();
+        } else {
+            topicsRecycler.unlockLazyLoading();
+            topicAdapter.showFooter();
+        }
+
+        /*if(updateMode.getInputUpdateMode()== ProviderInfo.UpdateMode.UPDATE) {
+            topicAdapter.addData(data);
+            if(updateMode.isAllDataWasObtained()){
+                topicAdapter.hideFooter();
+            } else
+                topicsRecycler.unlockRefreshLoading();
+        } else if (updateMode.getInputUpdateMode()== ProviderInfo.UpdateMode.REWRITE) {
+            topicAdapter.rewriteData(data);
+            if(updateMode.isAllDataWasObtained()){
+                topicAdapter.hideFooter();
+            } else {
+                topicsRecycler.unlockRefreshLoading();
+
+            }
+        }*/
+
+      /*
         switch (updateMode){
             case UPDATE:
+                topicAdapter.addData(data);
                 topicsRecycler.unlockLazyLoading();
                 break;
             case FINISH:
-                //lm.scrollToPosition(0);
-               topicAdapter.hideFooter();
+                topicAdapter.addData(data);
+                topicAdapter.hideFooter();
                 break;
-        }
+            case REWRITE:
+                topicAdapter.rewriteData(data);
+                topicsRecycler.unlockRefreshLoading();
+                topicAdapter.showFooter();
+                break;
+        }*/
 
 
     }

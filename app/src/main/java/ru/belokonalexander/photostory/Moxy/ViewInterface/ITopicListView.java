@@ -9,6 +9,8 @@ import java.util.List;
 
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
+import ru.belokonalexander.photostory.Views.Recyclers.DataContainer;
+import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 
 
 /**
@@ -21,6 +23,7 @@ public interface ITopicListView extends MvpView {
     @StateStrategyType(value = SkipStrategy.class)
     void showTopic(Topic topic);
 
-    void showNextPart(List<Topic> data, TopicListPresenter.UpdateMode mode);
+    void showNextPart(List<Topic> data, ProviderInfo updateMode);
+
 
 }

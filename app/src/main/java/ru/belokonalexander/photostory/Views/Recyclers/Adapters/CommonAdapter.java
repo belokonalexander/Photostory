@@ -49,6 +49,14 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
         notifyDataItemRangeInserted(was,part.size());
     }
 
+    public final void rewriteData(List<T> part){
+        data.clear();
+        int was = data.size()+1;
+        data.addAll(part);
+        notifyDataItemRangeInserted(was,part.size());
+        notifyDataSetChanged();
+    }
+
     public final void addToTop(List<T> part){
         data.addAll(0, part);
         notifyDataItemRangeInserted(0, part.size());
