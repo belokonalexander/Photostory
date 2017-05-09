@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -101,8 +102,21 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
 
 
+
         topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart());
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                topicsRecycler.setOnRefreshListener(new LazyLoadingRecycler.RefreshDataListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(getContext()," Test ", Toast.LENGTH_SHORT).show();
+                topicsRecycler.unlockRefreshLoading();
+            }
+        });
+            }
+        }, 2000);
 
         //SlideInBottomAnimationAdapter alphaAdapter = new SlideInBottomAnimationAdapter(topicAdapter);
 

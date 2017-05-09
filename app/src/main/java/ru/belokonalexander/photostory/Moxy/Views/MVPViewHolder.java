@@ -27,7 +27,6 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
     private boolean presenterIsExists(){
         for(String key :  getParentDelegate().getChildrenSaveState().keySet()) {
             if(getTag().equals(key.substring(key.lastIndexOf('$')+1,key.length()).trim())) {
-                Logger.logThis(" ---> Found: " + getTag());
                 return true;
             }
         }

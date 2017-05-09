@@ -1,9 +1,12 @@
 package ru.belokonalexander.photostory.Views.Recyclers;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.ViewParent;
 
 import ru.belokonalexander.photostory.Helpers.Logger;
 
@@ -17,19 +20,8 @@ public class LazyLoadingRecycler extends RecyclerView {
 
     private double LOAD_BORDER = 0; //px - количество пикселов до конца списка, перед началом подгрузкой
 
+    SwipeRefreshLayout refreshLayout;
 
-    /**
-     * иногда при быстрой прокрутке, после загрузки данных, скроллер продолжает находиться в старом состоянии (как перед загрузкой)
-     * из-за этого подгрузка может выполниться 2 раза подряд, добавление данного счетчика поможет избежать такой ситуации
-     */
-    //int preloadingIterations = 0;
-
-    //public final int MIN_PRELOAD_SCROLL = 3;
-
-    /**
-     * запретить события для подгрузки
-     * изначально подгрузка по скроллу запрещена, рекомендуется выполнить или Unlock или loadData
-     */
     private boolean loadingIsDisable = true;
 
 
@@ -57,7 +49,17 @@ public class LazyLoadingRecycler extends RecyclerView {
         if(LOAD_BORDER==0)
             LOAD_BORDER = .5 * getHeight();
 
-
+        if(refreshLayout==null){
+            ViewParent parent;
+            parent = getParent();
+            if(parent instanceof SwipeRefreshLayout) {
+                refreshLayout = (SwipeRefreshLayout) parent;
+                if(onRefreshListener==null)
+                    refreshLayout.setEnabled(false);
+                else refreshLayout.setOnRefreshListener(() -> onRefreshListener.onRefresh());
+            }
+            else throw new Resources.NotFoundException("Parent refresh layout was not found");
+        }
 
     }
 
@@ -121,13 +123,33 @@ public class LazyLoadingRecycler extends RecyclerView {
 
     }
 
+    public void unlockRefreshLoading(){
+        refreshLayout.setRefreshing(false);
+    }
+
     public void setOnGetDataListener(OnGetDataListener onGetDataListener) {
         this.onGetDataListener = onGetDataListener;
     }
 
+    public void setOnRefreshListener(RefreshDataListener onRefreshListener) {
+
+        this.onRefreshListener = onRefreshListener;
+        if(refreshLayout!=null){
+            refreshLayout.setOnRefreshListener(() -> onRefreshListener.onRefresh());
+            refreshLayout.setEnabled(true);
+        }
+    }
+
+
 
     public interface OnGetDataListener{
         void getData();
+    }
+
+    RefreshDataListener onRefreshListener;
+
+    public interface RefreshDataListener{
+        void onRefresh();
     }
 
 }

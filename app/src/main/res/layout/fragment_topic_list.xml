@@ -7,14 +7,18 @@
     android:background="@color/background_main"
     android:clickable="true">
 
-
-        <ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/topics_recycler"
-            android:overScrollMode="never"
-            />
+            android:layout_height="match_parent">
 
+                <ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/topics_recycler"
+                    android:overScrollMode="never"
+                    />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </RelativeLayout>
