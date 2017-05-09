@@ -70,7 +70,6 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
             return new TopicItemPresenter(topic);
         }
 
-
         @BindView(R.id.item_view)
         CardView cv;
 

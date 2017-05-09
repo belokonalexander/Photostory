@@ -6,6 +6,8 @@ import android.view.View;
 import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
+import ru.belokonalexander.photostory.Helpers.Logger;
+import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicItemPresenter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 
@@ -20,20 +22,26 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
 
 
     private MvpDelegate mvpDelegate;
+    boolean presenterIsExists;
 
     private boolean presenterIsExists(){
         for(String key :  getParentDelegate().getChildrenSaveState().keySet()) {
-            if(getTag().equals(key.substring(key.lastIndexOf('$')+1,key.length()).trim()))
+            if(getTag().equals(key.substring(key.lastIndexOf('$')+1,key.length()).trim())) {
+                Logger.logThis(" ---> Found: " + getTag());
                 return true;
+            }
         }
         return false;
     }
 
     protected P getPresenter(){
-        if(getPresenterField()==null){
+
+        if(!presenterIsExists){
             getMvpDelegate().onCreate();
             getMvpDelegate().onAttach();
         }
+
+
         return getPresenterField();
     }
 
@@ -58,8 +66,7 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
 
         bindModel(model);
 
-        boolean presenterIsExists = presenterIsExists();
-
+        presenterIsExists = presenterIsExists();
 
         if(presenterIsExists)
             getMvpDelegate().onCreate();
@@ -68,6 +75,7 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
 
         if(presenterIsExists)
             getMvpDelegate().onAttach();
+
 
     }
 
