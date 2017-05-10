@@ -47,24 +47,8 @@ public class LazyLoadingRecycler extends RecyclerView {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-
-        Logger.logThis(" ON LAYOUT");
-
         if(LOAD_BORDER==0)
             LOAD_BORDER = .5 * getHeight();
-
-        if(refreshLayout==null){
-            ViewParent parent;
-            parent = getParent();
-            if(parent instanceof SwipeRefreshLayout) {
-                refreshLayout = (SwipeRefreshLayout) parent;
-                if(onRefreshListener==null)
-                    refreshLayout.setEnabled(false);
-                else refreshLayout.setOnRefreshListener(() -> onRefreshListener.onRefresh());
-            }
-            else throw new Resources.NotFoundException("Parent refresh layout was not found");
-        }
-
     }
 
 
@@ -73,7 +57,7 @@ public class LazyLoadingRecycler extends RecyclerView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        Logger.logThis(" ON ATTACHED: " + getParent());
+        initRefresh(null);
 
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -136,14 +120,27 @@ public class LazyLoadingRecycler extends RecyclerView {
     }
 
     public void setOnRefreshListener(RefreshDataListener onRefreshListener) {
-        Logger.logThis(" ON SET LISTENER: " + getParent());
         this.onRefreshListener = onRefreshListener;
         if(refreshLayout!=null){
             refreshLayout.setOnRefreshListener(onRefreshListener::onRefresh);
             refreshLayout.setEnabled(true);
+        } else {
+           initRefresh(onRefreshListener);
         }
     }
 
+    private void initRefresh(RefreshDataListener onRefreshListener) {
+        if(refreshLayout==null) {
+            ViewParent parent;
+            parent = getParent();
+            if (parent instanceof SwipeRefreshLayout) {
+                refreshLayout = (SwipeRefreshLayout) parent;
+                if (onRefreshListener == null)
+                    refreshLayout.setEnabled(false);
+                else refreshLayout.setOnRefreshListener(onRefreshListener::onRefresh);
+            } else throw new Resources.NotFoundException("Parent refresh layout was not found");
+        }
+    }
 
 
     public interface OnGetDataListener{
