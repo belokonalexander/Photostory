@@ -6,7 +6,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.RxHelpers.SimpleDisposableObserver;
 
 /**
@@ -15,20 +14,20 @@ import ru.belokonalexander.photostory.RxHelpers.SimpleDisposableObserver;
 
 public class ListManager<T> {
 
-    private Observable<List<T>> provider;
-    private ViewResponse<T> viewResponse;
+    //private Observable<List<T>> provider;
+    private LoadingAction<T> loadingAction;
     private DisposableObserver<List<T>> receiver;
 
     private DataContainer<T> listMeta = new DataContainer<>();
 
-    public ListManager(Observable<List<T>> provider, ViewResponse<T> viewResponse) {
-        this.provider = provider;
-        this.viewResponse = viewResponse;
+    public ListManager(LoadingAction<T> loadingAction) {
+        this.loadingAction = loadingAction;
     }
 
 
 
-    public interface ViewResponse<T>{
+    public interface LoadingAction<T>{
+        Observable<List<T>> provideData(int pageSize, int offset);
         void updateListView(List<T> part, ProviderInfo info);
     }
 
@@ -46,15 +45,15 @@ public class ListManager<T> {
         if(receiver!=null && !receiver.isDisposed())
             receiver.dispose();
 
-        receiver = createDisposable(viewResponse, inputUpdateMode,inputData);
+        receiver = createDisposable(loadingAction, inputUpdateMode,inputData);
 
-        provider.subscribeOn(Schedulers.newThread())
+        loadingAction.provideData(inputData.getPageSize(),inputData.getOffset()).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(receiver);
 
     }
 
-    private DisposableObserver<List<T>> createDisposable(ViewResponse<T> viewResponse, ProviderInfo.UpdateMode inputUpdateMode, DataContainer<T> inputData) {
+    private DisposableObserver<List<T>> createDisposable(LoadingAction<T> viewResponse, ProviderInfo.UpdateMode inputUpdateMode, DataContainer<T> inputData) {
         return SimpleDisposableObserver.create(new SimpleDisposableObserver.OnNext<List<T>>() {
             @Override
             public void onNext(List<T> topics) {

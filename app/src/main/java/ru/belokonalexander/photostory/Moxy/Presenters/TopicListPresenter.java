@@ -5,17 +5,10 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import ru.belokonalexander.photostory.Models.Tmp;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
-import ru.belokonalexander.photostory.RxHelpers.SimpleDisposableObserver;
-import ru.belokonalexander.photostory.Views.Recyclers.DataContainer;
 import ru.belokonalexander.photostory.Views.Recyclers.ListManager;
 import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 
@@ -26,8 +19,18 @@ import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 @InjectViewState
 public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
-//todo как передать функцию для пагинации
-    private ListManager<Topic> listManager = new ListManager<>(Tmp.getAppTopics(), this::updateTopicListView);
+
+    private ListManager<Topic> listManager = new ListManager<>(new ListManager.LoadingAction<Topic>() {
+        @Override
+        public Observable<List<Topic>> provideData(int pageSize, int offset) {
+            return Tmp.getAppTopics(pageSize,offset);
+        }
+
+        @Override
+        public void updateListView(List<Topic> part, ProviderInfo info) {
+            updateTopicListView(part, info);
+        }
+    });
 
     public TopicListPresenter() {
 

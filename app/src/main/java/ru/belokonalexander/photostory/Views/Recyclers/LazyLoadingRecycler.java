@@ -46,6 +46,10 @@ public class LazyLoadingRecycler extends RecyclerView {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+
+
+        Logger.logThis(" ON LAYOUT");
+
         if(LOAD_BORDER==0)
             LOAD_BORDER = .5 * getHeight();
 
@@ -63,9 +67,13 @@ public class LazyLoadingRecycler extends RecyclerView {
 
     }
 
+
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
+        Logger.logThis(" ON ATTACHED: " + getParent());
 
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -80,11 +88,10 @@ public class LazyLoadingRecycler extends RecyclerView {
     }
 
     private void onScrollHeightController() {
-        //максимальная ВЫСОТА  = (getHeight() + ScrollOffset)
+
         int totalScrollSize = computeVerticalScrollRange();
 
         if(totalScrollSize<=0){
-            //скроллер не инициализирован
             return;
         }
 
@@ -95,9 +102,7 @@ public class LazyLoadingRecycler extends RecyclerView {
         boolean needToLoadNewData = currentScrollOffset + Math.max(getHeight(),getWidth()) > totalScrollSize - LOAD_BORDER;
         //Logger.logThis("scroll: " + (currentScrollOffset + getHeight()) + " / "  +  (totalScrollSize - LOAD_BORDER) + " / ---- " + totalScrollSize + " - " + computeVerticalScrollExtent());
 
-
         if( (!canScrollVertically(1) || needToLoadNewData) && !loadingIsDisable) {
-
                 if(onGetDataListener!=null) {
                     //задача разблокирования предоставляется поставщику
                     loadData();
@@ -131,10 +136,10 @@ public class LazyLoadingRecycler extends RecyclerView {
     }
 
     public void setOnRefreshListener(RefreshDataListener onRefreshListener) {
-
+        Logger.logThis(" ON SET LISTENER: " + getParent());
         this.onRefreshListener = onRefreshListener;
         if(refreshLayout!=null){
-            refreshLayout.setOnRefreshListener(() -> onRefreshListener.onRefresh());
+            refreshLayout.setOnRefreshListener(onRefreshListener::onRefresh);
             refreshLayout.setEnabled(true);
         }
     }
