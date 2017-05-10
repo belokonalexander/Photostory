@@ -20,6 +20,10 @@ import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
 
+    public TopicListPresenter() {
+
+    }
+
     private ListManager<Topic> listManager = new ListManager<>(new ListManager.LoadingAction<Topic>() {
         @Override
         public Observable<List<Topic>> provideData(int pageSize, int offset) {
@@ -32,19 +36,18 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
         }
     });
 
-    public TopicListPresenter() {
 
-    }
-
-    public void loadNextPart(ProviderInfo.UpdateMode inputUpdateMode){
+    public void TopicListLoadMore(ProviderInfo.UpdateMode inputUpdateMode){
         listManager.execute(inputUpdateMode);
     }
 
-    public void updateTopicListView(List<Topic> topics, ProviderInfo providerInfo){
-        getViewState().showNextPart(topics, providerInfo);
+    private void updateTopicListView(List<Topic> topics, ProviderInfo providerInfo){
+        if(providerInfo.getInputUpdateMode()== ProviderInfo.UpdateMode.REWRITE)
+            getViewState().refreshList(topics, providerInfo);
+        else if(providerInfo.getInputUpdateMode()== ProviderInfo.UpdateMode.UPDATE){
+            getViewState().showNextPart(topics,providerInfo);
+        }
     }
-
-
 
 
 }

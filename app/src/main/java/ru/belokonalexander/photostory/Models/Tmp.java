@@ -27,7 +27,7 @@ public class Tmp {
 
                 return topics;
             }
-        }).delay(3000, TimeUnit.MILLISECONDS);
+        }).delay(2000, TimeUnit.MILLISECONDS);
     };
 
 }

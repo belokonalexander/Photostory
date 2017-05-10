@@ -1,4 +1,4 @@
-package ru.belokonalexander.photostory.Moxy.ViewInterface;
+package ru.belokonalexander.photostory.Moxy.Strategy;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.ViewCommand;
@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Alexander on 30.04.2017.
+ * Created by Alexander on 22.04.2017.
  */
 
-public class AddToStartSingleStrategy implements StateStrategy {
+public class AddToEndSingleStrategyByTag implements StateStrategy {
     @Override
     public <View extends MvpView> void beforeApply(List<ViewCommand<View>> currentState, ViewCommand<View> incomingCommand) {
         Iterator<ViewCommand<View>> iterator = currentState.iterator();
@@ -19,7 +19,7 @@ public class AddToStartSingleStrategy implements StateStrategy {
         while (iterator.hasNext()) {
             ViewCommand<View> entry = iterator.next();
 
-            if (entry.getClass() == incomingCommand.getClass()) {
+            if (entry.getTag().equals(incomingCommand.getTag())) {
                 iterator.remove();
                 break;
             }

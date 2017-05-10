@@ -1,13 +1,11 @@
 package ru.belokonalexander.photostory.Moxy.ViewInterface;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
-import java.util.List;
-
 import ru.belokonalexander.photostory.Models.Topic;
-import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 
 
 /**
@@ -20,7 +18,7 @@ public interface ITopicView extends MvpView {
     @StateStrategyType(value = SkipStrategy.class)
     void showTopic(Topic topic);
 
-    @StateStrategyType(value = AddToStartSingleStrategy.class)
+    @StateStrategyType(value = AddToEndSingleStrategy.class)
     void updateProgress(int percent);
 
 }

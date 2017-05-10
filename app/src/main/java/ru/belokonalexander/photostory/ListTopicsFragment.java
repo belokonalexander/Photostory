@@ -1,46 +1,34 @@
 package ru.belokonalexander.photostory;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
-import ru.belokonalexander.photostory.Views.Recyclers.DataContainer;
 import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
 import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
+
+import static ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo.UpdateMode.REWRITE;
+import static ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo.UpdateMode.UPDATE;
 
 
 /**
@@ -86,8 +74,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
         topicAdapter.setHeaderView(new TextView(getContext()));
 
 
-        topicsRecycler.setOnGetDataListener(() -> presenter.loadNextPart(ProviderInfo.UpdateMode.UPDATE));
-        topicsRecycler.setOnRefreshListener(() -> presenter.loadNextPart(ProviderInfo.UpdateMode.REWRITE));
+        topicsRecycler.setOnGetDataListener(() -> presenter.TopicListLoadMore(UPDATE));
+        topicsRecycler.setOnRefreshListener(() -> presenter.TopicListLoadMore(REWRITE));
 
         topicsRecycler.setAdapter(topicAdapter);
 
@@ -99,7 +87,6 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
 
     public void addNewTopic(Topic topic){
-
         //topicsRecycler.addItem(topic);
     }
 
@@ -120,16 +107,20 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
     @Override
     public void showNextPart(List<Topic> data, ProviderInfo updateMode) {
+       topicAdapter.addData(data);
+       resolveListUpdateState(updateMode);
+    }
 
-         switch (updateMode.getInputUpdateMode()){
-            case REWRITE:
-                topicAdapter.rewriteData(data);
-                topicsRecycler.unlockRefreshLoading();
-                break;
-            case UPDATE:
-                topicAdapter.addData(data);
-                break;
-        }
+    @Override
+    public void refreshList(List<Topic> data, ProviderInfo updateMode) {
+       topicAdapter.rewriteData(data);
+       topicsRecycler.unlockRefreshLoading();
+       resolveListUpdateState(updateMode);
+    }
+
+    public void resolveListUpdateState(ProviderInfo updateMode){
+
+        Logger.logThis(" UPDATE: " + updateMode.getInputUpdateMode());
 
         if(updateMode.isAllDataWasObtained()){
             topicsRecycler.lockLazyLoading();
@@ -138,12 +129,6 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
             topicsRecycler.unlockLazyLoading();
             topicAdapter.showFooter();
         }
-
-
-
     }
-
-
-
 
 }
