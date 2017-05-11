@@ -1,5 +1,6 @@
 package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -22,12 +23,17 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
     private final int FOOTER = 101;
     private final int HEADER = 102;
 
+
+
     public HeaderFooterAdapter(MvpDelegate delegate) {
         super(delegate);
     }
 
     //прианаччен ли адаптер к ресайклу
     private boolean attached = false;
+
+
+
 
     @Override
     public int getItemCount() {
@@ -60,8 +66,8 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
     private View headerView;
     private View footerView;
 
-    private boolean footerIsEnabled;
-    private boolean headerIsEnabled;
+    protected boolean footerIsEnabled;
+    protected boolean headerIsEnabled;
 
 
 

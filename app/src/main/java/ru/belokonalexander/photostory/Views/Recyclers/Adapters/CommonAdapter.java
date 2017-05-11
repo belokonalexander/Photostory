@@ -1,5 +1,6 @@
 package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -16,6 +17,7 @@ import ru.belokonalexander.photostory.Helpers.Logger;
 
 public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+
     List<T> data;
 
     MvpDelegate parentDelegate;
@@ -25,6 +27,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<RecyclerView
     public interface OnClickListener<T>{
         void onClick(T item);
     }
+
 
     public CommonAdapter() {
         data = new ArrayList<>();

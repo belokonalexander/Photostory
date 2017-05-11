@@ -1,6 +1,7 @@
 package ru.belokonalexander.photostory;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -18,16 +19,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
 import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 
-import static ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo.UpdateMode.REWRITE;
 import static ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo.UpdateMode.UPDATE;
 
 
@@ -68,20 +68,20 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
         topicsRecycler.setLayoutManager(lm);
 
-        topicAdapter = new TopicAdapter(getMvpDelegate());
+        topicAdapter = new TopicAdapter(getMvpDelegate(), getContext());
 
         topicAdapter.setFooterView(new ProgressBar(getContext()));
         topicAdapter.setHeaderView(new TextView(getContext()));
-
+        topicAdapter.setOnClickListener(item -> presenter.showTopic(item));
 
         topicsRecycler.setOnGetDataListener(() -> presenter.TopicListLoadMore(UPDATE));
-        topicsRecycler.setOnRefreshListener(() -> presenter.TopicListLoadMore(REWRITE));
 
         topicsRecycler.setAdapter(topicAdapter);
 
         if(savedInstanceState==null){
             topicsRecycler.loadData();
         }
+
 
     }
 
@@ -100,7 +100,7 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
     public void showTopic(Topic topic) {
         //делегируем обработку активити
         //т.к dual pane и может придется заполнять второй фрагмент
-        ((ITopicListView)getActivity()).showTopic(topic);
+        ((MainActivity)getActivity()).showTopic(topic);
     }
 
 
@@ -118,9 +118,8 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
        resolveListUpdateState(updateMode);
     }
 
-    public void resolveListUpdateState(ProviderInfo updateMode){
 
-        Logger.logThis(" UPDATE: " + updateMode.getInputUpdateMode());
+    public void resolveListUpdateState(ProviderInfo updateMode){
 
         if(updateMode.isAllDataWasObtained()){
             topicsRecycler.lockLazyLoading();

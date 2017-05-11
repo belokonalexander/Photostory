@@ -27,9 +27,9 @@ public class SimpleDisposableObserver<T> extends DisposableObserver<T> {
 
     @Override
     public void onComplete() {
+        this.dispose();
         if(onCompleteTask !=null)
             onCompleteTask.onComplete();
-        this.dispose();
     }
 
     public static<T> DisposableObserver<T> create(OnNext<T> onNextTask){

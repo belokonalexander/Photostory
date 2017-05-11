@@ -1,8 +1,8 @@
 package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +14,8 @@ import com.arellomobile.mvp.MvpDelegate;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicItemPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicView;
@@ -30,13 +23,10 @@ import ru.belokonalexander.photostory.Moxy.Views.MVPViewHolder;
 import ru.belokonalexander.photostory.R;
 
 
-import static android.support.v7.widget.RecyclerView.NO_POSITION;
-
-
 public class TopicAdapter extends HeaderFooterAdapter<Topic> {
 
 
-    public TopicAdapter(MvpDelegate delegate) {
+    public TopicAdapter(MvpDelegate delegate, Context context) {
         super(delegate);
     }
 
@@ -93,11 +83,20 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
         @Override
         protected void bindView(Topic model) {
             titleTextView.setText(" -> " + topic.getTitle());
+
+            deselectItem();
+
             cv.setOnClickListener(v -> {
-                getPresenter().startTask();
+                if(onClickListener!=null) {
+                    //getPresenter().deselectItems();
+                    getPresenter().selectItem();
+                    onClickListener.onClick(topic);
+                }
             });
             progressBar.setProgress(0);
         }
+
+
 
         @Override
         protected MvpDelegate getParentDelegate() {
@@ -123,6 +122,20 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
         public void updateProgress(int percent) {
             progressBar.setProgress(percent);
         }
+
+        @Override
+        public void selectItem() {
+            cv.setEnabled(false);
+            cv.setBackgroundColor(0xFFFF0000);
+        }
+
+        @Override
+        public void deselectItem() {
+            cv.setEnabled(true);
+            cv.setBackgroundColor(0xFF00FF00);
+        }
+
+
     }
 
 }

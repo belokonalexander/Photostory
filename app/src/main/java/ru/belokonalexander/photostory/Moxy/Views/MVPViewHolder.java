@@ -25,6 +25,7 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
     boolean presenterIsExists;
 
     private boolean presenterIsExists(){
+
         for(String key :  getParentDelegate().getChildrenSaveState().keySet()) {
             if(getTag().equals(key.substring(key.lastIndexOf('$')+1,key.length()).trim())) {
                 return true;
@@ -76,6 +77,18 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
             getMvpDelegate().onAttach();
 
 
+    }
+
+    public void doForAll(DoForAllAction action){
+
+        for(String key :  getParentDelegate().getChildrenSaveState().keySet()) {
+           //getParentDelegate().
+        }
+
+    }
+
+    public interface DoForAllAction{
+        void doForAll(MvpDelegate delegate);
     }
 
     protected abstract void bindModel(T model);

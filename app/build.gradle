@@ -64,6 +64,9 @@ dependencies {
     compile 'com.arello-mobile:moxy:1.5.1'
     apt 'com.arello-mobile:moxy-compiler:1.5.1'
 
+    //eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
     compile 'com.arello-mobile:moxy-app-compat:1.5.1'
     compile 'com.android.support:appcompat-v7:25.3.0'
 

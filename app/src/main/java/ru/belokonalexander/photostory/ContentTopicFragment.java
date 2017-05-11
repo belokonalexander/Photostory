@@ -73,7 +73,9 @@ public class ContentTopicFragment extends MvpAppCompatFragment implements ITopic
 
     @Override
     public void fillContent(Topic topic) {
-
+        if(topic!=null) {
+            topicId.setText(" --> " + topic.getTitle());
+        }
     }
 
     public void updateContent(Topic topic) {

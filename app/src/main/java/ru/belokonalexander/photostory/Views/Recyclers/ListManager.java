@@ -24,7 +24,7 @@ public class ListManager<T> {
         this.loadingAction = loadingAction;
     }
 
-
+    public ProviderInfo.UpdateMode lastOperation;
 
     public interface LoadingAction<T>{
         Observable<List<T>> provideData(int pageSize, int offset);
@@ -42,10 +42,16 @@ public class ListManager<T> {
         if(inputData.isAllDataWasObtaining())
             return;
 
-        if(receiver!=null && !receiver.isDisposed())
-            receiver.dispose();
+        if(receiver!=null && !receiver.isDisposed()) {
+            if(lastOperation != inputUpdateMode)
+                receiver.dispose();
+            else
+                return;
+        }
 
         receiver = createDisposable(loadingAction, inputUpdateMode,inputData);
+
+        lastOperation = inputUpdateMode;
 
         loadingAction.provideData(inputData.getPageSize(),inputData.getOffset()).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

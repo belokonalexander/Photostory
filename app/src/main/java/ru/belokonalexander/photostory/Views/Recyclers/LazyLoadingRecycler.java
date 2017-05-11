@@ -84,6 +84,7 @@ public class LazyLoadingRecycler extends RecyclerView {
 
         //ОТСТУП СКРОЛЛЕРА + РАЗМЕР ЭКРАНА (ПО БОЛЬШЕЙ СТОРОНЕ ЭКРАНА) > МАКСИМАЛЬНАЯ ВЫСОТА - ОТСТУП ПОДГРУЗКИ
         boolean needToLoadNewData = currentScrollOffset + Math.max(getHeight(),getWidth()) > totalScrollSize - LOAD_BORDER;
+        //Logger.logThis("height: " + getHeight() + " | scroll offset: " + currentScrollOffset + " | totalScroll:"  +  totalScrollSize + " | LOAD_BORDER " + LOAD_BORDER);
         //Logger.logThis("scroll: " + (currentScrollOffset + getHeight()) + " / "  +  (totalScrollSize - LOAD_BORDER) + " / ---- " + totalScrollSize + " - " + computeVerticalScrollExtent());
 
         if( (!canScrollVertically(1) || needToLoadNewData) && !loadingIsDisable) {
@@ -113,6 +114,7 @@ public class LazyLoadingRecycler extends RecyclerView {
 
     public void unlockRefreshLoading(){
         refreshLayout.setRefreshing(false);
+        onScrollHeightController();
     }
 
     public void setOnGetDataListener(OnGetDataListener onGetDataListener) {
@@ -120,10 +122,11 @@ public class LazyLoadingRecycler extends RecyclerView {
     }
 
     public void setOnRefreshListener(RefreshDataListener onRefreshListener) {
+        //TODO presenter must resolve startRefresh and endRefresh
         this.onRefreshListener = onRefreshListener;
         if(refreshLayout!=null){
             refreshLayout.setOnRefreshListener(onRefreshListener::onRefresh);
-            refreshLayout.setEnabled(true);
+                refreshLayout.setEnabled(true);
         } else {
            initRefresh(onRefreshListener);
         }
@@ -135,8 +138,9 @@ public class LazyLoadingRecycler extends RecyclerView {
             parent = getParent();
             if (parent instanceof SwipeRefreshLayout) {
                 refreshLayout = (SwipeRefreshLayout) parent;
-                if (onRefreshListener == null)
-                    refreshLayout.setEnabled(false);
+                if (onRefreshListener == null) {
+                        refreshLayout.setEnabled(false);
+                }
                 else refreshLayout.setOnRefreshListener(onRefreshListener::onRefresh);
             } else throw new Resources.NotFoundException("Parent refresh layout was not found");
         }

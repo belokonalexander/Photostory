@@ -50,4 +50,7 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
     }
 
 
+    public void showTopic(Topic item) {
+        getViewState().showTopic(item);
+    }
 }
