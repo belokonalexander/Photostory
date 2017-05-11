@@ -9,8 +9,13 @@ import io.reactivex.observers.DisposableObserver;
 
 public class SimpleDisposableObserver<T> extends DisposableObserver<T> {
 
-    public SimpleDisposableObserver(OnNext<T> onNextTask) {
+    private SimpleDisposableObserver(OnNext<T> onNextTask) {
         this.onNextTask = onNextTask;
+    }
+
+    private SimpleDisposableObserver(OnNext<T> onNextTask, OnComplete onComplete) {
+        this.onNextTask = onNextTask;
+        this.onCompleteTask = onComplete;
     }
 
     @Override
@@ -32,9 +37,14 @@ public class SimpleDisposableObserver<T> extends DisposableObserver<T> {
             onCompleteTask.onComplete();
     }
 
-    public static<T> DisposableObserver<T> create(OnNext<T> onNextTask){
+    public static<T> SimpleDisposableObserver<T> create(OnNext<T> onNextTask){
         return new SimpleDisposableObserver<>(onNextTask);
     }
+
+    public static<T> SimpleDisposableObserver<T> create(OnNext<T> onNextTask, OnComplete onComplete){
+        return new SimpleDisposableObserver<>(onNextTask, onComplete);
+    }
+
 
     private OnComplete onCompleteTask;
     private OnError onErrorTask;

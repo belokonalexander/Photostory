@@ -41,7 +41,7 @@ public class Tmp {
                                 e.printStackTrace();
                             }
 
-                            Logger.logThis(" ---> " + "tick - " + tag);
+                            //Logger.logThis(" ---> " + "tick - " + tag);
                         }
                         return null;
                     }

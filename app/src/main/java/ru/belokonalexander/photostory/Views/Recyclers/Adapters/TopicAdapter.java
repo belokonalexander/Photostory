@@ -16,6 +16,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicItemPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicView;
@@ -42,6 +43,8 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_topic,parent,false);
         return new TopicHolder(v);
     }
+
+
 
     @Override
     int getItemType(int position) {
@@ -88,7 +91,7 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
 
             cv.setOnClickListener(v -> {
                 if(onClickListener!=null) {
-                    //getPresenter().deselectItems();
+                    getPresenter().startTask();
                     getPresenter().selectItem();
                     onClickListener.onClick(topic);
                 }
@@ -118,10 +121,7 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
 
         }
 
-        @Override
-        public void updateProgress(int percent) {
-            progressBar.setProgress(percent);
-        }
+
 
         @Override
         public void selectItem() {
@@ -134,6 +134,17 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
             cv.setEnabled(true);
             cv.setBackgroundColor(0xFF00FF00);
         }
+
+        @Override
+        public void updateTask(Integer position) {
+            progressBar.setProgress(position);
+        }
+
+        @Override
+        public void finishUpdateTask() {
+            Logger.logThis(" Finish task: " + topic.getId());
+        }
+
 
 
     }

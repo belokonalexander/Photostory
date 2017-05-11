@@ -1,36 +1,35 @@
 package ru.belokonalexander.photostory.Moxy.Presenters;
 
 import com.arellomobile.mvp.InjectViewState;
-import com.arellomobile.mvp.MvpPresenter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 import ru.belokonalexander.photostory.Events.ListEvent;
 import ru.belokonalexander.photostory.Helpers.Logger;
-import ru.belokonalexander.photostory.Helpers.SimpleAsyncTask;
 import ru.belokonalexander.photostory.Models.Topic;
-import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicView;
+import ru.belokonalexander.photostory.RxHelpers.HashedTask;
+import ru.belokonalexander.photostory.RxHelpers.SimpleDisposableObserver;
+import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
 
 /**
  * Created by Alexander on 22.04.2017.
  */
 
 @InjectViewState
-public class TopicItemPresenter extends MvpPresenter<ITopicView> {
+public class TopicItemPresenter extends ViewHolderPresenter<ITopicView> {
 
     private Topic topic;
 
     public TopicItemPresenter(Topic topic) {
+        Logger.logThis(" CREATE PRESENTER: ");
         this.topic = topic;
         EventBus.getDefault().register(this);
     }
@@ -41,6 +40,13 @@ public class TopicItemPresenter extends MvpPresenter<ITopicView> {
         getViewState().selectItem();
     }
 
+    public void startTask(){
+        HashedTask<Integer> hashedTask = getTask();
+        addTask(hashedTask);
+        Observable.intervalRange(0,100,0,100, TimeUnit.MILLISECONDS)
+            .map(Long::intValue)
+            .subscribe(hashedTask.getTask());
+    }
 
     @Subscribe
     public void deselect(ListEvent event){
@@ -48,6 +54,24 @@ public class TopicItemPresenter extends MvpPresenter<ITopicView> {
         if(!event.getTopicId().equals(topic.getId())){
            getViewState().deselectItem();
         }
+    }
+
+
+
+    public HashedTask<Integer> getTask(){
+        return new HashedTask<>("Progress", SimpleDisposableObserver.create(new SimpleDisposableObserver.OnNext<Integer>() {
+            @Override
+            public void onNext(Integer integer) {
+                getViewState().updateTask(integer);
+            }
+        }, new SimpleDisposableObserver.OnComplete() {
+            @Override
+            public void onComplete() {
+                Logger.logThis(" FINISH TASK ");
+                getViewState().finishUpdateTask();
+            }
+        }));
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Strategy.AddToEndSingleStrategyByTag;
+import ru.belokonalexander.photostory.Moxy.Strategy.AddToEndWithCompressor;
 
 
 /**
@@ -19,12 +20,15 @@ public interface ITopicView extends MvpView {
     @StateStrategyType(value = SkipStrategy.class)
     void showTopic(Topic topic);
 
-    @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void updateProgress(int percent);
-
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "select")
     void selectItem();
 
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "select")
     void deselectItem();
+
+    @StateStrategyType(value = AddToEndWithCompressor.class, tag = "task$do")
+    void updateTask(Integer position);
+
+    @StateStrategyType(value = AddToEndWithCompressor.class, tag = "task$stop")
+    void finishUpdateTask();
 }

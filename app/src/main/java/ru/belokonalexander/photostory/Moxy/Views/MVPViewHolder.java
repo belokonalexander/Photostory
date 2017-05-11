@@ -9,13 +9,14 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicItemPresenter;
+import ru.belokonalexander.photostory.Moxy.Presenters.ViewHolderPresenter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 
 /**
  * Created by Alexander on 08.05.2017.
  */
 
-public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
+public abstract class MVPViewHolder<T, P extends ViewHolderPresenter> extends RecyclerView.ViewHolder {
     public MVPViewHolder(View itemView) {
         super(itemView);
     }
@@ -46,6 +47,7 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
     }
 
 
+
     private MvpDelegate getMvpDelegate(){
         if(mvpDelegate==null){
             mvpDelegate = new MvpDelegate<>(this);
@@ -57,10 +59,21 @@ public abstract class MVPViewHolder<T, P> extends RecyclerView.ViewHolder {
 
 
     public void bind(T model){
+
+
+
         if(mvpDelegate !=null){
             getMvpDelegate().onSaveInstanceState();
             getMvpDelegate().onDetach();
             getMvpDelegate().onDestroyView();
+
+            if(getPresenterField()!=null && getPresenterField().presenterCanBeRemoved()) {
+                Logger.logThis(" Могу удалить презентер");
+                getMvpDelegate().onDestroy();
+            } else {
+                Logger.logThis(" Нельзя удалить презентер");
+            }
+
             mvpDelegate = null;
         }
 

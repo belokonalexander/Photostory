@@ -15,7 +15,7 @@ public class DataContainer<T> {
 
     private boolean allDataWasObtaining = false;
 
-    private int pageSize = 20;
+    private int pageSize = 50;
 
     public DataContainer() {
         data = new ArrayList<T>();

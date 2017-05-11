@@ -82,6 +82,12 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
             topicsRecycler.loadData();
         }
 
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getMvpDelegate().onDestroy();
+            }
+        },  5000);*/
 
     }
 

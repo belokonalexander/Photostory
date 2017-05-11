@@ -60,14 +60,14 @@ public class ListManager<T> {
     }
 
     private DisposableObserver<List<T>> createDisposable(LoadingAction<T> viewResponse, ProviderInfo.UpdateMode inputUpdateMode, DataContainer<T> inputData) {
-        return SimpleDisposableObserver.create(new SimpleDisposableObserver.OnNext<List<T>>() {
-            @Override
-            public void onNext(List<T> topics) {
-                listMeta = inputData;
-                ProviderInfo providerInfo = (inputUpdateMode == ProviderInfo.UpdateMode.REWRITE) ? listMeta.rewrite(topics) : listMeta.addPart(topics);
-                viewResponse.updateListView(topics, providerInfo);
-            }
-        });
+            return SimpleDisposableObserver.create(new SimpleDisposableObserver.OnNext<List<T>>() {
+                @Override
+                public void onNext(List<T> topics) {
+                    listMeta = inputData;
+                    ProviderInfo providerInfo = (inputUpdateMode == ProviderInfo.UpdateMode.REWRITE) ? listMeta.rewrite(topics) : listMeta.addPart(topics);
+                    viewResponse.updateListView(topics, providerInfo);
+                }
+            });
     }
 
 }

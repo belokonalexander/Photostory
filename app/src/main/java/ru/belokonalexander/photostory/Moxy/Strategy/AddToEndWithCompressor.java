@@ -2,21 +2,20 @@ package ru.belokonalexander.photostory.Moxy.Strategy;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.ViewCommand;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategy;
 
 import java.util.Iterator;
 import java.util.List;
 
-import ru.belokonalexander.photostory.Helpers.Logger;
-
 /**
  * Created by Alexander on 10.05.2017.
  */
 
-public class TagAndTypeStrategy implements StateStrategy {
+public class AddToEndWithCompressor implements StateStrategy {
 
     private enum StrategyType {
-        SINGLE, CHAIN;
+        DO, STOP;
     }
 
     private String delimiter = "$";
@@ -35,25 +34,23 @@ public class TagAndTypeStrategy implements StateStrategy {
 
 
 
-        if(incomingCommand.getStrategyType().equals(TagAndTypeStrategy.class)) {
+        if(incomingCommand.getStrategyType().equals(AddToEndWithCompressor.class)) {
+
             String incomingTag = incomingCommand.getTag();
             StrategyType type = getType(incomingTag);
             String tag = getTag(incomingTag);
 
-            if (type==StrategyType.CHAIN)
-                currentState.add(incomingCommand);
-            else {
-                    while (iterator.hasNext()) {
-                        ViewCommand<View> entry = iterator.next();
+            while (iterator.hasNext()) {
+                ViewCommand<View> entry = iterator.next();
+                if (entry.getStrategyType().equals(AddToEndWithCompressor.class) && getTag(entry.getTag()).equals(tag))
+                    iterator.remove();
 
-                        if (entry.getStrategyType().equals(TagAndTypeStrategy.class) && getTag(entry.getTag()).equals(tag)) {
-                                    iterator.remove();
-                            }
-                        }
-
-                    currentState.add(incomingCommand);
-                }
             }
+
+            if(type==StrategyType.DO)
+                currentState.add(incomingCommand);
+        }
+
     }
 
     @Override
