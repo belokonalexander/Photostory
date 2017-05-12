@@ -24,9 +24,12 @@ public interface ITopicListView extends MvpView {
     void showTopic(Topic topic);
 
     @StateStrategyType(value = TagAndTypeStrategy.class, tag = "List$chain")
-    void showNextPart(List<Topic> data, ProviderInfo updateMode);
+    void showNextPart(List<Topic> data);
 
     @StateStrategyType(value = TagAndTypeStrategy.class, tag = "List$single")
-    void refreshList(List<Topic> data, ProviderInfo updateMode);
+    void refreshList(List<Topic> data);
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class)
+    void updateListState(ProviderInfo updateMode);
 
 }

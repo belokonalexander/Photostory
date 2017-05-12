@@ -33,8 +33,6 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
     private boolean attached = false;
 
 
-
-
     @Override
     public int getItemCount() {
 
@@ -154,11 +152,6 @@ public abstract class HeaderFooterAdapter<T> extends CommonAdapter<T> {
         int shift = 0;
         if(headerIsEnabled)
             shift++;
-
-       /*if(footerIsEnabled)
-            shift++;*/
-
-        //Logger.logThis(" Обновляю с позиции: " + positionStart + " / " + itemCount);
 
         if(itemCount>1)
             notifyItemRangeInserted(positionStart+shift, itemCount);

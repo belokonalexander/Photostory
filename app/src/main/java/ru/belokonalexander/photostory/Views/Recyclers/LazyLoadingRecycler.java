@@ -85,11 +85,12 @@ public class LazyLoadingRecycler extends RecyclerView {
         //ОТСТУП СКРОЛЛЕРА + РАЗМЕР ЭКРАНА (ПО БОЛЬШЕЙ СТОРОНЕ ЭКРАНА) > МАКСИМАЛЬНАЯ ВЫСОТА - ОТСТУП ПОДГРУЗКИ
         boolean needToLoadNewData = currentScrollOffset + Math.max(getHeight(),getWidth()) > totalScrollSize - LOAD_BORDER;
         //Logger.logThis("height: " + getHeight() + " | scroll offset: " + currentScrollOffset + " | totalScroll:"  +  totalScrollSize + " | LOAD_BORDER " + LOAD_BORDER);
-        //Logger.logThis("scroll: " + (currentScrollOffset + getHeight()) + " / "  +  (totalScrollSize - LOAD_BORDER) + " / ---- " + totalScrollSize + " - " + computeVerticalScrollExtent());
+        Logger.logThis("scroll: " + (currentScrollOffset + getHeight()) + " / "  +  (totalScrollSize - LOAD_BORDER) + " / ---- " + totalScrollSize + " - " + computeVerticalScrollExtent());
 
         if( (!canScrollVertically(1) || needToLoadNewData) && !loadingIsDisable) {
                 if(onGetDataListener!=null) {
                     //задача разблокирования предоставляется поставщику
+                    Logger.logThis(" ЗАПРАШИВАЮ ");
                     loadData();
                 }
         }
@@ -109,12 +110,14 @@ public class LazyLoadingRecycler extends RecyclerView {
     }
 
     public void unlockLazyLoading(){
+        Logger.logThis(" Открыли скролл ");
         loadingIsDisable = false;
+        onScrollHeightController();
     }
 
     public void unlockRefreshLoading(){
         refreshLayout.setRefreshing(false);
-        onScrollHeightController();
+        //onScrollHeightController();
     }
 
     public void setOnGetDataListener(OnGetDataListener onGetDataListener) {

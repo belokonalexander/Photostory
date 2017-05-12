@@ -2,6 +2,7 @@ package ru.belokonalexander.photostory.RxHelpers;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
+import ru.belokonalexander.photostory.Helpers.Logger;
 
 /**
  * Created by Alexander on 09.05.2017.
@@ -32,6 +33,7 @@ public class SimpleDisposableObserver<T> extends DisposableObserver<T> {
 
     @Override
     public void onComplete() {
+        Logger.logThis(" ON DISPOSE ");
         this.dispose();
         if(onCompleteTask !=null)
             onCompleteTask.onComplete();

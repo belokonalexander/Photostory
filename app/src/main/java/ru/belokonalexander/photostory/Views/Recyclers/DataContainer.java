@@ -1,45 +1,44 @@
 package ru.belokonalexander.photostory.Views.Recyclers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.belokonalexander.photostory.Models.Topic;
+import ru.belokonalexander.photostory.Views.Recyclers.Adapters.IDataContainer;
 
 /**
  * Created by Alexander on 09.05.2017.
  */
 
-public class DataContainer<T> {
+public class DataContainer<T> implements IDataContainer<T>{
 
     private List<T> data;
 
     private boolean allDataWasObtaining = false;
 
-    private int pageSize = 50;
+    private int pageSize = 2;
 
     public DataContainer() {
         data = new ArrayList<T>();
-        //this.pageSize = pageSize;
     }
 
-    private DataContainer(DataContainer<T> realState) {
-        data = realState.getData();
-        pageSize = realState.getPageSize();
-        allDataWasObtaining = realState.allDataWasObtaining;
-    }
 
     public List<T> getData() {
         return data;
     }
 
+    @Override
     public int getOffset(){
         return data.size();
     }
 
+    @Override
     public int getPageSize() {
         return pageSize;
     }
 
+    @Override
     public ProviderInfo addPart(List<T> part){
         allDataWasObtaining = false;
         return addPart(part, ProviderInfo.UpdateMode.UPDATE);
@@ -54,6 +53,7 @@ public class DataContainer<T> {
         return new ProviderInfo(updateMode,allDataWasObtaining);
     }
 
+    @Override
     public ProviderInfo rewrite(List<T> part){
         allDataWasObtaining = false;
         data.clear();
@@ -65,8 +65,9 @@ public class DataContainer<T> {
         return allDataWasObtaining;
     }
 
-
-    public static<T> DataContainer<T>  cloneState(DataContainer<T> realState) {
-        return new DataContainer<>(realState);
+    @Override
+    public List<T> getLast(int lastN) {
+        return new ArrayList<T>(data.subList(data.size()-lastN,data.size()));
     }
+
 }

@@ -24,6 +24,11 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
     }
 
+    @Override
+    protected void onFirstViewAttach() {
+        topicListLoadMore(ProviderInfo.UpdateMode.UPDATE);
+    }
+
     private ListManager<Topic> listManager = new ListManager<>(new ListManager.LoadingAction<Topic>() {
         @Override
         public Observable<List<Topic>> provideData(int pageSize, int offset) {
@@ -31,21 +36,26 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
         }
 
         @Override
-        public void updateListView(List<Topic> part, ProviderInfo info) {
-            updateTopicListView(part, info);
+        public void updateListView(List<Topic> part, ProviderInfo.UpdateMode updateMode) {
+            updateTopicListView(part, updateMode);
+        }
+
+        @Override
+        public void updateListViewState(ProviderInfo info) {
+            getViewState().updateListState(info);
         }
     });
 
 
-    public void TopicListLoadMore(ProviderInfo.UpdateMode inputUpdateMode){
+    public void topicListLoadMore(ProviderInfo.UpdateMode inputUpdateMode){
         listManager.execute(inputUpdateMode);
     }
 
-    private void updateTopicListView(List<Topic> topics, ProviderInfo providerInfo){
-        if(providerInfo.getInputUpdateMode()== ProviderInfo.UpdateMode.REWRITE)
-            getViewState().refreshList(topics, providerInfo);
-        else if(providerInfo.getInputUpdateMode()== ProviderInfo.UpdateMode.UPDATE){
-            getViewState().showNextPart(topics,providerInfo);
+    private void updateTopicListView(List<Topic> topics, ProviderInfo.UpdateMode updateMode){
+        if(updateMode== ProviderInfo.UpdateMode.REWRITE)
+            getViewState().refreshList(topics);
+        else if(updateMode == ProviderInfo.UpdateMode.UPDATE){
+            getViewState().showNextPart(topics);
         }
     }
 

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 import javax.inject.Inject;
 
 import ru.belokonalexander.photostory.App;
@@ -62,4 +65,27 @@ public class StaticUtils {
     public static String camelCaseToUnderscore(String string){
         return string.replaceAll("(.)(\\p{Upper})", "$1_$2").toUpperCase();
     }
+
+    public static class ReflectionUtil {
+        public static Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
+            try {
+                return clazz.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                Class superClass = clazz.getSuperclass();
+                if (superClass == null) {
+                    throw e;
+                } else {
+                    return getField(superClass, fieldName);
+                }
+            }
+        }
+        public static void makeAccessible(Field field) {
+            if (!Modifier.isPublic(field.getModifiers()) ||
+                    !Modifier.isPublic(field.getDeclaringClass().getModifiers()))
+            {
+                field.setAccessible(true);
+            }
+        }
+    }
+
 }

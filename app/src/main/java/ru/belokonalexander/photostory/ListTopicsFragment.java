@@ -1,7 +1,6 @@
 package ru.belokonalexander.photostory;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import ru.belokonalexander.photostory.Models.Topic;
 import ru.belokonalexander.photostory.Moxy.Presenters.TopicListPresenter;
 import ru.belokonalexander.photostory.Moxy.ViewInterface.ITopicListView;
 
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.CommonAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.TopicAdapter;
 import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
 import ru.belokonalexander.photostory.Views.Recyclers.ProviderInfo;
@@ -68,26 +66,17 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
         topicsRecycler.setLayoutManager(lm);
 
-        topicAdapter = new TopicAdapter(getMvpDelegate(), getContext());
+        topicAdapter = new TopicAdapter(getMvpDelegate());
 
         topicAdapter.setFooterView(new ProgressBar(getContext()));
         topicAdapter.setHeaderView(new TextView(getContext()));
         topicAdapter.setOnClickListener(item -> presenter.showTopic(item));
 
-        topicsRecycler.setOnGetDataListener(() -> presenter.TopicListLoadMore(UPDATE));
+        topicsRecycler.setOnGetDataListener(() -> presenter.topicListLoadMore(UPDATE));
 
         topicsRecycler.setAdapter(topicAdapter);
 
-        if(savedInstanceState==null){
-            topicsRecycler.loadData();
-        }
 
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getMvpDelegate().onDestroy();
-            }
-        },  5000);*/
 
     }
 
@@ -112,21 +101,20 @@ public class ListTopicsFragment extends MvpAppCompatFragment implements ITopicLi
 
 
     @Override
-    public void showNextPart(List<Topic> data, ProviderInfo updateMode) {
+    public void showNextPart(List<Topic> data) {
        topicAdapter.addData(data);
-       resolveListUpdateState(updateMode);
+       //resolveListUpdateState(updateMode);
     }
 
     @Override
-    public void refreshList(List<Topic> data, ProviderInfo updateMode) {
+    public void refreshList(List<Topic> data) {
        topicAdapter.rewriteData(data);
        topicsRecycler.unlockRefreshLoading();
-       resolveListUpdateState(updateMode);
+       //resolveListUpdateState(updateMode);
     }
 
-
-    public void resolveListUpdateState(ProviderInfo updateMode){
-
+    @Override
+    public void updateListState(ProviderInfo updateMode) {
         if(updateMode.isAllDataWasObtained()){
             topicsRecycler.lockLazyLoading();
             topicAdapter.hideFooter();
