@@ -9,11 +9,10 @@ import javax.inject.Inject;
 public class Settings {
 
     public enum WorkMode {
-        Test, Release
+        DEBUG, RELEASE
     }
 
     private final WorkMode workMode;
-
 
     public Settings(WorkMode workMode) {
         this.workMode = workMode;
@@ -26,11 +25,6 @@ public class Settings {
 
     //tags
     public final String BACKPRESS_ENABLE = "BACKPRESS";
-
-
-
-    //params
-
 
     public final int CLICK_DELAY = 50;
 }

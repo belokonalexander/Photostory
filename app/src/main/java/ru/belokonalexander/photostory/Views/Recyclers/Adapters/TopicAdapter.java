@@ -1,3 +1,4 @@
+/*
 package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
 
 import android.content.Context;
@@ -84,3 +85,4 @@ public class TopicAdapter extends HeaderFooterAdapter<Topic> {
     }
 
 }
+*/

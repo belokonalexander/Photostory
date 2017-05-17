@@ -1,4 +1,4 @@
-package ru.belokonalexander.photostory.DI.Modules;
+package ru.belokonalexander.photostory.DI.application;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -17,12 +17,10 @@ import ru.belokonalexander.photostory.Helpers.Settings;
 @Module
 public class AppModule {
 
-    private Settings.WorkMode workMode;
     private Context appContext;
 
-    public AppModule(@NonNull Context appContext, @NonNull Settings.WorkMode workMode) {
+    public AppModule(@NonNull Context appContext) {
         this.appContext = appContext;
-        this.workMode = workMode;
     }
 
     @Provides
@@ -31,19 +29,10 @@ public class AppModule {
         return appContext;
     }
 
-
-/*
-    @Provides
-    @Singleton
-    Logger provideLogger(){
-        return new Logger();
-    }
-*/
-
     @Provides
     @Singleton
     Settings provideSettings(){
-        return new Settings(workMode);
+        return new Settings(Settings.WorkMode.DEBUG);
     }
 
 }

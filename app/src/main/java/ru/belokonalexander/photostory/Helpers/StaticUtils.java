@@ -54,13 +54,13 @@ public class StaticUtils {
         return false;
     }
 
-    public static int dpToPixels(float dp) {
+    /*public static int dpToPixels(float dp) {
         return (int) (dp * App.getAppContext().getResources().getDisplayMetrics().density);
     }
 
     public static float pixelsToDp(int px) {
         return (px/ App.getAppContext().getResources().getDisplayMetrics().density);
-    }
+    }*/
 
     public static String camelCaseToUnderscore(String string){
         return string.replaceAll("(.)(\\p{Upper})", "$1_$2").toUpperCase();

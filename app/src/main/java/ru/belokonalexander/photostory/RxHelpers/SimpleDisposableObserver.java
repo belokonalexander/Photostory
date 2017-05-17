@@ -33,7 +33,6 @@ public class SimpleDisposableObserver<T> extends DisposableObserver<T> {
 
     @Override
     public void onComplete() {
-        Logger.logThis(" ON DISPOSE ");
         this.dispose();
         if(onCompleteTask !=null)
             onCompleteTask.onComplete();

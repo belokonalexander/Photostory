@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ru.belokonalexander.photostory.Models.Topic;
+
 import ru.belokonalexander.photostory.Views.Recyclers.Adapters.IDataContainer;
 
 /**

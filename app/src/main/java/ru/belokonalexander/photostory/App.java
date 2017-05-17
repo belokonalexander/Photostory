@@ -2,11 +2,12 @@ package ru.belokonalexander.photostory;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import ru.belokonalexander.photostory.DI.Components.AppComponent;
-import ru.belokonalexander.photostory.DI.Components.DaggerAppComponent;
-import ru.belokonalexander.photostory.DI.Modules.AppModule;
-import ru.belokonalexander.photostory.Helpers.Settings;
+import ru.belokonalexander.photostory.DI.application.AppComponent;
+import ru.belokonalexander.photostory.DI.application.AppModule;
+import ru.belokonalexander.photostory.DI.application.DaggerAppComponent;
+
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -14,26 +15,22 @@ import ru.belokonalexander.photostory.Helpers.Settings;
 
 public class App extends Application {
 
-    private static AppComponent appComponent;
+    private AppComponent appComponent;
 
-    private static Context appContext;
 
-    public static AppComponent getAppComponent() {
+    public AppComponent getAppComponent() {
         return appComponent;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        appComponent = buildComponent();
-        appContext = getApplicationContext();
+        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 
-    private AppComponent buildComponent() {
-        return DaggerAppComponent.builder().appModule(new AppModule(this, Settings.WorkMode.Release)).build();
+    @NonNull
+    public static App get(@NonNull Context context) {
+        return (App) context.getApplicationContext();
     }
 
-    public static Context getAppContext() {
-        return appContext;
-    }
 }
