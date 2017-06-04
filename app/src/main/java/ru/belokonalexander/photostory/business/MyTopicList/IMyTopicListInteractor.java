@@ -1,9 +1,10 @@
 package ru.belokonalexander.photostory.business.MyTopicList;
 
+import com.mikepenz.fastadapter.IItem;
+
 import java.util.List;
 
 import io.reactivex.Single;
-import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicModel;
 
 /**
  * Created by Alexander on 16.05.2017.
@@ -11,6 +12,6 @@ import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicModel;
 
 public interface IMyTopicListInteractor {
 
-    Single<List<TopicModel>> getTopics(int offset);
+    Single<List<IItem>> getTopicsForList(int offset);
 
 }

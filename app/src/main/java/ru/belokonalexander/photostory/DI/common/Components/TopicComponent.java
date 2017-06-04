@@ -1,6 +1,8 @@
-package ru.belokonalexander.photostory.DI.common;
+package ru.belokonalexander.photostory.DI.common.Components;
 
 import dagger.Subcomponent;
+import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
+import ru.belokonalexander.photostory.DI.common.Scopes.TopicScope;
 import ru.belokonalexander.photostory.presentation.MyTopicList.view.MyTopicListFragment;
 
 /**

@@ -4,9 +4,8 @@ import javax.inject.Singleton;
 
 
 import dagger.Component;
-import ru.belokonalexander.photostory.DI.common.TopicComponent;
-import ru.belokonalexander.photostory.DI.common.TopicModule;
-import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicModel;
+import ru.belokonalexander.photostory.DI.common.Components.TopicComponent;
+import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
 
 /**
  * Created by Alexander on 22.04.2017.

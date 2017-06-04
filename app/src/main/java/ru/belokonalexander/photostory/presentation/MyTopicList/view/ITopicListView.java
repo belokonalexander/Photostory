@@ -1,10 +1,14 @@
 package ru.belokonalexander.photostory.presentation.MyTopicList.view;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
+import com.mikepenz.fastadapter.IItem;
 
 import java.util.List;
 
-import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicModel;
+
 
 /**
  * Created by Alexander on 16.05.2017.
@@ -12,6 +16,9 @@ import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicModel;
 
 public interface ITopicListView extends MvpView {
 
-    void afterLoadMoreTopics(List<TopicModel> part);
+    @StateStrategyType(value = AddToEndStrategy.class)
+    void afterLoadMoreTopics(List<IItem> part);
 
+    @StateStrategyType(value = AddToEndSingleStrategy.class)
+    void showTopic(IItem item);
 }

@@ -2,4 +2,9 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/ripple">
     <item android:drawable="@color/white" />
+    <item>
+        <selector>
+            <item android:state_activated="true" android:drawable="@color/about"/>
+        </selector>
+    </item>
 </ripple>

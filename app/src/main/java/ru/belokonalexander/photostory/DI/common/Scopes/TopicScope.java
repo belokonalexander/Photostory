@@ -1,4 +1,4 @@
-package ru.belokonalexander.photostory.DI.common;
+package ru.belokonalexander.photostory.DI.common.Scopes;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -43,12 +43,12 @@ public class MainActivity extends AppCompatActivity {
             ft.commit();
         }
 
-        new Handler().postDelayed(new Runnable() {
+       /* new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 showTopicContent(new Bundle());
             }
-        }, 2000);
+        }, 2000);*/
 
     }
 

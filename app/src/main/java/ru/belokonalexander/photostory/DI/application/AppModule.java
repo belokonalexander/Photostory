@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.Helpers.Settings;
+import ru.belokonalexander.photostory.business.MappersUtils.ItemsToFlexibleMapper;
 
 /**
  * Created by Alexander on 22.04.2017.
@@ -33,6 +33,12 @@ public class AppModule {
     @Singleton
     Settings provideSettings(){
         return new Settings(Settings.WorkMode.DEBUG);
+    }
+
+    @Provides
+    @Singleton
+    ItemsToFlexibleMapper provideItemsToFlexibleMapper(){
+        return new ItemsToFlexibleMapper();
     }
 
 }

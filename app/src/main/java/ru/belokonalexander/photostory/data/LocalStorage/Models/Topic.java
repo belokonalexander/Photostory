@@ -2,6 +2,8 @@ package ru.belokonalexander.photostory.data.LocalStorage.Models;
 
 import java.util.Random;
 
+import ru.belokonalexander.photostory.Helpers.Logger;
+
 /**
  * Created by Alexander on 16.05.2017.
  */
@@ -12,9 +14,12 @@ public class Topic {
     private String desc;
     private Long id;
 
+    static long count = 0;
+
     public Topic() {
-        id = new Random(1000).nextLong();
+        id = ++count;
         desc = " Desc: " + id;
+
         title = " Title: " + id;
     }
 

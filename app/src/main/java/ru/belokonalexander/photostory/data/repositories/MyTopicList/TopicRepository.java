@@ -23,7 +23,7 @@ public class TopicRepository implements ITopicRepository {
 
                 List<Topic> topicList = new ArrayList<>();
 
-                for(int i =0; i < 10; i++) {
+                for(int i =0; i < 40; i++) {
                     topicList.add(new Topic());
                 }
 

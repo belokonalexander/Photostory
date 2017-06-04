@@ -25,6 +25,8 @@
     <color name="tint_color_accent">#33b5e5</color>
 
     <color name="ripple">#efefef</color>
+    <color name="selected">#b5cfe2</color>
+    <color name="ripple_selected">#a1b8c9</color>
 
     <color name="pre_primary">#a5c1e6</color>
     <color name="white">#fff</color>
