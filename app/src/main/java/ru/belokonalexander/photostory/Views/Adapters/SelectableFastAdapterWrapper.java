@@ -15,12 +15,15 @@ public class SelectableFastAdapterWrapper<Item extends IItem> {
 
     private FastItemAdapter<Item> adapter  = new FastItemAdapter<>();
 
-    Item currentSelectedItem;
+    private ISelectedItem currentSelectedItem;
 
-    FastAdapter.OnClickListener<Item> onClickListener;
+    private boolean selectMainItem = false;
 
-    public SelectableFastAdapterWrapper(FastItemAdapter<Item> adapter) {
+    private FastAdapter.OnClickListener<Item> onClickListener;
+
+    public SelectableFastAdapterWrapper(FastItemAdapter<Item> adapter, boolean selectMainItem) {
         this.adapter = adapter;
+        this.selectMainItem = selectMainItem;
         initBehaviour();
     }
 
@@ -38,35 +41,43 @@ public class SelectableFastAdapterWrapper<Item extends IItem> {
         adapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
             @Override
             public boolean onClick(View v, IAdapter<Item> adapter, Item item, int position) {
-                if(adapter.getFastAdapter().getSelectedItems().size()>0){
-                    adapter.getFastAdapter().toggleSelection(position);
-                } else {
-                    if(!item.equals(currentSelectedItem)) {
 
-                        if(currentSelectedItem!=null) {
-                            int oldItemPosition = adapter.getFastAdapter().getPosition(currentSelectedItem);
-                            if (oldItemPosition >= 0) {
-
-                                ((ISelectedItem) currentSelectedItem).withSingleSelected(false);
-                                adapter.getFastAdapter().notifyItemChanged(oldItemPosition);
-                            }
-                        }
-
-                        currentSelectedItem = item;
-                        ((ISelectedItem)currentSelectedItem).withSingleSelected(true);
-                        adapter.getFastAdapter().notifyItemChanged(position);
-
-                        if (onClickListener != null)
-                            onClickListener.onClick(v, adapter, item, position);
+                    if(adapter.getFastAdapter().getSelectedItems().size()>0 && item.isSelectable()){
+                        adapter.getFastAdapter().toggleSelection(position);
+                        return false;
                     }
-                }
+
+                if (onClickListener != null)
+                    onClickListener.onClick(v, adapter, item, position);
+
                 return false;
             }
         });
 
     }
 
+    public void select(Item item){
+        if(selectMainItem && item instanceof ISelectedItem && !item.equals(currentSelectedItem)) {
+
+            if(currentSelectedItem!=null) {
+                int oldItemPosition = getFastItemAdapter().getPosition((Item) currentSelectedItem);
+                if (oldItemPosition >= 0) {
+
+                    currentSelectedItem.withSingleSelected(false);
+                    getFastItemAdapter().notifyItemChanged(oldItemPosition);
+                }
+            }
+
+            currentSelectedItem = (ISelectedItem) item;
+            currentSelectedItem.withSingleSelected(true);
+            getFastItemAdapter().notifyItemChanged(getFastItemAdapter().getPosition(item));
+
+        }
+    }
+
     public void setClickListener(FastAdapter.OnClickListener<Item> clickListener) {
         this.onClickListener = clickListener;
     }
+
+
 }

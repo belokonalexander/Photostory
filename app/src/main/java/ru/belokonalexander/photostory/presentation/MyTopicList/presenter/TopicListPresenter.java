@@ -4,7 +4,9 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.mikepenz.fastadapter.IItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -20,7 +22,7 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
     private IMyTopicListInteractor myTopicListInteractor;
 
-
+    List<IItem> content = new ArrayList<>();
 
     public TopicListPresenter(IMyTopicListInteractor myTopicListInteractor) {
         this.myTopicListInteractor = myTopicListInteractor;
@@ -40,7 +42,16 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
     };
 
     private void handleSuccessTopicList(List<IItem> topics){
-        getViewState().afterLoadMoreTopics(topics);
+
+        int wasSize = content.size();
+
+        this.content.addAll(topics);
+
+        if(wasSize==0)
+            getViewState().showTopicList(content);
+        else
+            getViewState().afterLoadMoreTopics(topics);
+
     }
 
     private void handleFailureTopicList(Throwable e){
@@ -49,5 +60,27 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
     public void selectTopic(IItem topicItem) {
         getViewState().showTopic(topicItem);
+    }
+
+    public void changeTopicSelectionState() {
+        getViewState().changeOnSelectTopicState();
+    }
+
+    public void deleteTopics(Set<Integer> topicsPositions) {
+
+        int deletedItems = 0;
+
+        for(int i = 0; i < content.size()-deletedItems; i++){
+            if(topicsPositions.contains(i)){
+                content.remove(i-deletedItems);
+                deletedItems++;
+            }
+        }
+
+      /*  for(int pos : topicsPositions){
+            content.remove(pos);
+        }*/
+
+        getViewState().deleteTopics(topicsPositions);
     }
 }

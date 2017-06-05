@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,18 +16,19 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.belokonalexander.photostory.App;
 import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
-import ru.belokonalexander.photostory.Helpers.Logger;
+import ru.belokonalexander.photostory.MainActivity;
 import ru.belokonalexander.photostory.R;
 import ru.belokonalexander.photostory.Views.Adapters.SelectableFastAdapterWrapper;
 import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicHolderModel;
@@ -43,12 +46,15 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
     @BindView(R.id.topics_recycler)
     RecyclerView recyclerView;
 
-    SelectableFastAdapterWrapper<IItem> adapter = new SelectableFastAdapterWrapper<>(new FastItemAdapter<>());
+    @Inject @Named("ControlListPanel")
+    SelectableFastAdapterWrapper<IItem> adapter;
 
     @ProvidePresenter
     public TopicListPresenter provideTopicListPresenter(){
         return topicListPresenter;
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,22 +75,11 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter.getFastItemAdapter());
 
-        //adapter.withSelectable(true);
-        /*adapter.withSelectable(true);
-        adapter.withSelectWithItemUpdate(true);
-        adapter.withSelectOnLongClick(true);
-        adapter.withMultiSelect(true);
+        adapter.setClickListener((v, adapter1, item, position) -> {
+            topicListPresenter.selectTopic(item);
+            return false;
+        });
 
-        adapter.withOnClickListener(new FastAdapter.OnClickListener<IItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
-                if(adapter.getFastAdapter().getSelectedItems().size()>0){
-                   adapter.getFastAdapter().toggleSelection(position);
-                } else
-
-                return true;
-            }
-        });*/
 
         adapter.getFastItemAdapter().withItemEvent(new ClickEventHook<IItem>() {
             @Override
@@ -102,18 +97,72 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
             }
         });
 
+        adapter.getFastItemAdapter().withSelectionListener((item, selected) -> topicListPresenter.changeTopicSelectionState());
+
+
+
     }
 
+
+    @Override
+    public void showTopicList(List<IItem> topicList) {
+        adapter.getFastItemAdapter().add(topicList);
+    }
 
     @Override
     public void afterLoadMoreTopics(List<IItem> part) {
-
         adapter.getFastItemAdapter().add(part);
+    }
+
+
+    @Override
+    public void showTopic(IItem item) {
+        adapter.select(item);
+    }
+
+    @Override
+    public void deleteTopics(Set<Integer> items) {
+
+        adapter.getFastItemAdapter().deleteAllSelectedItems();
+        adapter.getFastItemAdapter().deselect();
 
     }
 
     @Override
-    public void showTopic(IItem item) {
-        Logger.logThis(" Выбран: " + ((TopicHolderModel)item).getTitle() + " ---> "  + item.isSelected() + " adapter: " + adapter.getFastItemAdapter().getSelectedItems());
+    public void changeOnSelectTopicState() {
+        if(adapter.getFastItemAdapter().getSelectedItems().size()>0) {
+            moveInMultiselectMode();
+        } else {
+            leaveMultiselectMode();
+        }
     }
+
+
+    public void moveInMultiselectMode(){
+
+
+        if(getToolbar().getMenu().findItem(1)==null) {
+
+            MenuItem clearSelected = getToolbar().getMenu().add(101, 1, 1, getString(R.string.delete));
+            clearSelected.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            clearSelected.setIcon(R.drawable.ic_delete_white_24dp);
+            clearSelected.setOnMenuItemClickListener(item -> {
+                topicListPresenter.deleteTopics(adapter.getFastItemAdapter().getSelections());
+                leaveMultiselectMode();
+                return false;
+            });
+        }
+
+    }
+
+    public void leaveMultiselectMode(){
+
+        getToolbar().getMenu().removeGroup(101);
+
+    }
+
+    public Toolbar getToolbar(){
+        return ((MainActivity)getActivity()).getToolbar();
+    }
+
 }
