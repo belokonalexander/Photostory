@@ -1,17 +1,9 @@
 package ru.belokonalexander.photostory.DI.common.Modules;
 
-import android.content.Context;
-
-import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-
-import javax.inject.Named;
-
 import dagger.Module;
 import dagger.Provides;
 import ru.belokonalexander.photostory.DI.common.Scopes.TopicScope;
-import ru.belokonalexander.photostory.R;
-import ru.belokonalexander.photostory.Views.Adapters.SelectableFastAdapterWrapper;
+import ru.belokonalexander.photostory.Views.Adapters.Paginator;
 import ru.belokonalexander.photostory.business.MappersUtils.ItemsToFlexibleMapper;
 import ru.belokonalexander.photostory.business.MyTopicList.IMyTopicListInteractor;
 import ru.belokonalexander.photostory.business.MyTopicList.MyTopicListInteractor;
@@ -40,16 +32,11 @@ public class TopicModule {
 
     @Provides
     @TopicScope
-    TopicListPresenter provideTopicListPresenter(IMyTopicListInteractor interactor){
-        return new TopicListPresenter(interactor);
+    TopicListPresenter provideTopicListPresenter(IMyTopicListInteractor interactor, Paginator paginator){
+        return new TopicListPresenter(interactor, paginator);
     }
 
-    @Provides
-    @TopicScope
-    @Named("ControlListPanel")
-    SelectableFastAdapterWrapper<IItem> provideSelectableFastAdapterWrapper(Context context){
-       return new SelectableFastAdapterWrapper<>(new FastItemAdapter<>(), context.getResources().getBoolean(R.bool.dualPaneMode));
-    };
+
 
 
 }

@@ -11,7 +11,7 @@ import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
  * Created by Alexander on 22.04.2017.
  */
 
-@Component(modules = {AppModule.class})
+@Component(modules = {AppModule.class, ViewModule.class})
 @Singleton
 public interface AppComponent {
 

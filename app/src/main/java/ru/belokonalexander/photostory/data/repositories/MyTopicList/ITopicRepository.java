@@ -3,6 +3,7 @@ package ru.belokonalexander.photostory.data.repositories.MyTopicList;
 import java.util.List;
 
 import io.reactivex.Single;
+import ru.belokonalexander.photostory.Views.Adapters.IPaginator;
 import ru.belokonalexander.photostory.data.LocalStorage.Models.Topic;
 
 /**
@@ -11,6 +12,6 @@ import ru.belokonalexander.photostory.data.LocalStorage.Models.Topic;
 
 public interface ITopicRepository {
 
-    Single<List<Topic>> getTopics(int offset);
+    Single<List<Topic>> getTopics(IPaginator paginator);
 
 }

@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ru.belokonalexander.photostory.Helpers.Logger;
+import ru.belokonalexander.photostory.Views.Adapters.Paginator;
 import ru.belokonalexander.photostory.business.MyTopicList.IMyTopicListInteractor;
 import ru.belokonalexander.photostory.presentation.MyTopicList.view.ITopicListView;
 
@@ -20,38 +23,51 @@ import ru.belokonalexander.photostory.presentation.MyTopicList.view.ITopicListVi
 @InjectViewState
 public class TopicListPresenter extends MvpPresenter<ITopicListView> {
 
+    private final Paginator paginator;
     private IMyTopicListInteractor myTopicListInteractor;
 
-    List<IItem> content = new ArrayList<>();
+    private List<IItem> content = new ArrayList<>();
 
-    public TopicListPresenter(IMyTopicListInteractor myTopicListInteractor) {
+    public TopicListPresenter(IMyTopicListInteractor myTopicListInteractor, Paginator paginator) {
         this.myTopicListInteractor = myTopicListInteractor;
+        this.paginator = paginator;
     }
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        loadMore(0);
+        loadMore();
     }
 
 
 
-    public void loadMore(int offset){
-        myTopicListInteractor.getTopicsForList(offset).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleSuccessTopicList, this::handleFailureTopicList);
+    Disposable disposableLoadMore;
+
+    public void loadMore(){
+
+        if(disposableLoadMore==null || disposableLoadMore.isDisposed()) {
+            paginator.setOffset(content.size());
+            disposableLoadMore = myTopicListInteractor.getTopicsForList(paginator).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::handleSuccessTopicList, this::handleFailureTopicList);
+        }
     };
 
     private void handleSuccessTopicList(List<IItem> topics){
 
+        Logger.logThis(" Load DATA: " + paginator.getOffset());
+
+        paginator.calculateAllDataWasObtaining(topics.size());
         int wasSize = content.size();
 
-        this.content.addAll(topics);
+        content.addAll(topics);
 
         if(wasSize==0)
             getViewState().showTopicList(content);
         else
             getViewState().afterLoadMoreTopics(topics);
 
+
+        getViewState().enableLoadMore(paginator.hasMore());
     }
 
     private void handleFailureTopicList(Throwable e){
@@ -69,7 +85,6 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
     public void deleteTopics(Set<Integer> topicsPositions) {
 
         int deletedItems = 0;
-
         for(int i = 0; i < content.size()-deletedItems; i++){
             if(topicsPositions.contains(i)){
                 content.remove(i-deletedItems);
@@ -77,10 +92,7 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> {
             }
         }
 
-      /*  for(int pos : topicsPositions){
-            content.remove(pos);
-        }*/
-
         getViewState().deleteTopics(topicsPositions);
+        getViewState().enableLoadMore(paginator.hasMore());
     }
 }

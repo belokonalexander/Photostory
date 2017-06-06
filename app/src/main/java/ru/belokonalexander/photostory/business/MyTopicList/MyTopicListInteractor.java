@@ -9,6 +9,8 @@ import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import ru.belokonalexander.photostory.Views.Adapters.IPaginator;
+import ru.belokonalexander.photostory.Views.Adapters.Paginator;
 import ru.belokonalexander.photostory.business.MappersUtils.ItemsToFlexibleMapper;
 import ru.belokonalexander.photostory.data.LocalStorage.Models.Topic;
 import ru.belokonalexander.photostory.data.repositories.MyTopicList.ITopicRepository;
@@ -29,8 +31,8 @@ public class MyTopicListInteractor implements IMyTopicListInteractor {
     }
 
     @Override
-    public Single<List<IItem>> getTopicsForList(int offset) {
-        return topicRepository.getTopics(offset).flatMap(new Function<List<Topic>, SingleSource<List<TopicHolderModel>>>() {
+    public Single<List<IItem>> getTopicsForList(IPaginator paginator) {
+        return topicRepository.getTopics(paginator).flatMap(new Function<List<Topic>, SingleSource<List<TopicHolderModel>>>() {
             @Override
             public SingleSource<List<TopicHolderModel>> apply(@NonNull List<Topic> topics) throws Exception {
                 return Single.fromCallable(() -> {

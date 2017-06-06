@@ -104,9 +104,9 @@ public class TopicHolderModel extends AbstractSelectedItem<TopicHolderModel,Topi
         });
 
         if(isSingleSelected()) {
-            viewHolder.titleTextView.setBackgroundColor(Color.RED);
+            viewHolder.titleTextView.setTextColor(Color.RED);
         } else {
-            viewHolder.titleTextView.setBackgroundColor(Color.BLUE);
+            viewHolder.titleTextView.setTextColor(Color.GRAY);
         }
 
         viewHolder.titleTextView.setText(title);

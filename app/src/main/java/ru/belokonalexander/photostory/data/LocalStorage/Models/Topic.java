@@ -1,9 +1,5 @@
 package ru.belokonalexander.photostory.data.LocalStorage.Models;
 
-import java.util.Random;
-
-import ru.belokonalexander.photostory.Helpers.Logger;
-
 /**
  * Created by Alexander on 16.05.2017.
  */
@@ -14,14 +10,13 @@ public class Topic {
     private String desc;
     private Long id;
 
-    static long count = 0;
-
-    public Topic() {
-        id = ++count;
+    public Topic(Long id) {
+        this.id = id;
         desc = " Desc: " + id;
-
         title = " Title: " + id;
     }
+
+
 
     public String getDesc() {
         return desc;

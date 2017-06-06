@@ -5,6 +5,7 @@ import com.mikepenz.fastadapter.IItem;
 import java.util.List;
 
 import io.reactivex.Single;
+import ru.belokonalexander.photostory.Views.Adapters.IPaginator;
 
 /**
  * Created by Alexander on 16.05.2017.
@@ -12,6 +13,6 @@ import io.reactivex.Single;
 
 public interface IMyTopicListInteractor {
 
-    Single<List<IItem>> getTopicsForList(int offset);
+    Single<List<IItem>> getTopicsForList(IPaginator paginator);
 
 }

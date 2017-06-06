@@ -16,7 +16,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
+import com.mikepenz.fastadapter_extensions.items.ProgressItem;
 
 import java.util.List;
 import java.util.Set;
@@ -31,6 +33,7 @@ import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
 import ru.belokonalexander.photostory.MainActivity;
 import ru.belokonalexander.photostory.R;
 import ru.belokonalexander.photostory.Views.Adapters.SelectableFastAdapterWrapper;
+import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
 import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicHolderModel;
 import ru.belokonalexander.photostory.presentation.MyTopicList.presenter.TopicListPresenter;
 
@@ -44,10 +47,13 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
     TopicListPresenter topicListPresenter;
 
     @BindView(R.id.topics_recycler)
-    RecyclerView recyclerView;
+    LazyLoadingRecycler recyclerView;
 
     @Inject @Named("ControlListPanel")
     SelectableFastAdapterWrapper<IItem> adapter;
+
+    private FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
+
 
     @ProvidePresenter
     public TopicListPresenter provideTopicListPresenter(){
@@ -72,8 +78,10 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter.getFastItemAdapter());
+
+
+        //footerAdapter.add(new ProgressItem().withEnabled(false));
+
 
         adapter.setClickListener((v, adapter1, item, position) -> {
             topicListPresenter.selectTopic(item);
@@ -101,7 +109,21 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
 
 
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(footerAdapter.wrap(adapter.getFastItemAdapter()));
+
+        recyclerView.setOnGetDataListener(new LazyLoadingRecycler.OnGetDataListener() {
+            @Override
+            public void getData() {
+                topicListPresenter.loadMore();
+            }
+        });
+
     }
+
+
+
+
 
 
     @Override
@@ -115,6 +137,7 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
     }
 
 
+
     @Override
     public void showTopic(IItem item) {
         adapter.select(item);
@@ -124,7 +147,6 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
     public void deleteTopics(Set<Integer> items) {
 
         adapter.getFastItemAdapter().deleteAllSelectedItems();
-        adapter.getFastItemAdapter().deselect();
 
     }
 
@@ -134,6 +156,15 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
             moveInMultiselectMode();
         } else {
             leaveMultiselectMode();
+        }
+    }
+
+    @Override
+    public void enableLoadMore(boolean booleanWrapper) {
+        footerAdapter.clear();
+        if (booleanWrapper) {
+            footerAdapter.add(new ProgressItem().withEnabled(false));
+            recyclerView.unlockLazyLoading();
         }
     }
 

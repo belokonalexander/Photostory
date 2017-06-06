@@ -1,14 +1,9 @@
 package ru.belokonalexander.photostory.Views.Recyclers;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.ViewParent;
-
-import ru.belokonalexander.photostory.Helpers.Logger;
 
 /**
  * Created by Alexander on 06.05.2017.
@@ -18,12 +13,15 @@ import ru.belokonalexander.photostory.Helpers.Logger;
 
 public class LazyLoadingRecycler extends RecyclerView {
 
-    private double LOAD_BORDER = 0; //px - количество пикселов до конца списка, перед началом подгрузкой
+    private double LOAD_BORDER = 0; //px - количество пикселов до конца списка, перед началом подгрузки
 
-    SwipeRefreshLayout refreshLayout;
-
+  /*  SwipeRefreshLayout refreshLayout;
+*/
     private boolean loadingIsDisable = true;
 
+    private int previousSuccessTotalScroll = -1;
+    private long lastPendingTime = -1;
+    private long updateStep = 1000; //ms
 
     public LazyLoadingRecycler(Context context) {
         super(context);
@@ -48,7 +46,7 @@ public class LazyLoadingRecycler extends RecyclerView {
         super.onLayout(changed, l, t, r, b);
 
         if(LOAD_BORDER==0)
-            LOAD_BORDER = .5 * getHeight();
+            LOAD_BORDER = .3 * getHeight();
     }
 
 
@@ -56,8 +54,6 @@ public class LazyLoadingRecycler extends RecyclerView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
-        initRefresh(null);
 
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -86,10 +82,21 @@ public class LazyLoadingRecycler extends RecyclerView {
         boolean needToLoadNewData = currentScrollOffset + Math.max(getHeight(),getWidth()) > totalScrollSize - LOAD_BORDER;
         //Logger.logThis("height: " + getHeight() + " | scroll offset: " + currentScrollOffset + " | totalScroll:"  +  totalScrollSize + " | LOAD_BORDER " + LOAD_BORDER);
 
-        if( (!canScrollVertically(1) || needToLoadNewData) && !loadingIsDisable) {
+        if( (!canScrollVertically(1) || needToLoadNewData) && !loadingIsDisable ) {
                 if(onGetDataListener!=null) {
-                    //задача разблокирования предоставляется поставщику
-                    loadData();
+                    /**
+                     *  необходимо избежать момента, когда значение скроллинга не успевает измениться,
+                     *  для этого игнорируем обновление (по totalScroll последнего успешного значения) +
+                     *  добавляем таймаут, чтобы был успех по totalScroll последнего значения, но по времени, когда
+                     *  скроллер уже должен был подстроиться под актуальные данные
+                     */
+                    if(totalScrollSize!=previousSuccessTotalScroll || (lastPendingTime>0 && lastPendingTime+updateStep<System.currentTimeMillis())) {
+                        lastPendingTime = -1;
+                        previousSuccessTotalScroll = totalScrollSize;
+                        loadData();
+                    } else {
+                        lastPendingTime = System.currentTimeMillis();
+                    }
                 }
         }
 
@@ -108,20 +115,21 @@ public class LazyLoadingRecycler extends RecyclerView {
     }
 
     public void unlockLazyLoading(){
+
         loadingIsDisable = false;
         onScrollHeightController();
     }
 
-    public void unlockRefreshLoading(){
+  /*  public void unlockRefreshLoading(){
         refreshLayout.setRefreshing(false);
         //onScrollHeightController();
-    }
+    }*/
 
     public void setOnGetDataListener(OnGetDataListener onGetDataListener) {
         this.onGetDataListener = onGetDataListener;
     }
 
-    public void setOnRefreshListener(RefreshDataListener onRefreshListener) {
+    /*public void setOnRefreshListener(RefreshDataListener onRefreshListener) {
         //TODO presenter must resolve startRefresh and endRefresh
         this.onRefreshListener = onRefreshListener;
         if(refreshLayout!=null){
@@ -130,9 +138,9 @@ public class LazyLoadingRecycler extends RecyclerView {
         } else {
            initRefresh(onRefreshListener);
         }
-    }
+    }*/
 
-    private void initRefresh(RefreshDataListener onRefreshListener) {
+    /*private void initRefresh(RefreshDataListener onRefreshListener) {
         if(refreshLayout==null) {
             ViewParent parent;
             parent = getParent();
@@ -144,17 +152,13 @@ public class LazyLoadingRecycler extends RecyclerView {
                 else refreshLayout.setOnRefreshListener(onRefreshListener::onRefresh);
             } else throw new Resources.NotFoundException("Parent refresh layout was not found");
         }
-    }
+    }*/
 
 
     public interface OnGetDataListener{
         void getData();
     }
 
-    RefreshDataListener onRefreshListener;
 
-    public interface RefreshDataListener{
-        void onRefresh();
-    }
 
 }
