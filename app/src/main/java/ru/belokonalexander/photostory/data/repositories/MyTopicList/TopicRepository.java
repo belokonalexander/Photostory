@@ -22,11 +22,11 @@ public class TopicRepository implements ITopicRepository {
 
             List<Topic> topicList = new ArrayList<>();
 
-            for(int i = paginator.getOffset(); i < (paginator.getOffset() + paginator.getPageSize()) && i < 50; i++) {
+            for(int i = paginator.getOffset(); i < (paginator.getOffset() + paginator.getPageSize()) && i < 11; i++) {
                 topicList.add(new Topic((long) i));
             }
 
             return topicList;
-        }).delay(1000, TimeUnit.MILLISECONDS);
+        }).delay(2000, TimeUnit.MILLISECONDS);
     }
 }

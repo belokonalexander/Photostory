@@ -29,10 +29,10 @@ public class ViewModule {
 
     @Provides
     Paginator providePaginator(Context context){
-
         //todo calculate pageSize for device
-
-        return new Paginator(10);
+        return new Paginator(1);
     }
+
+
 
 }

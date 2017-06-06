@@ -32,6 +32,7 @@ import ru.belokonalexander.photostory.App;
 import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
 import ru.belokonalexander.photostory.MainActivity;
 import ru.belokonalexander.photostory.R;
+import ru.belokonalexander.photostory.Views.Adapters.ComplexListManager;
 import ru.belokonalexander.photostory.Views.Adapters.SelectableFastAdapterWrapper;
 import ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler;
 import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicHolderModel;
@@ -80,9 +81,6 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
         ButterKnife.bind(this,view);
 
 
-        //footerAdapter.add(new ProgressItem().withEnabled(false));
-
-
         adapter.setClickListener((v, adapter1, item, position) -> {
             topicListPresenter.selectTopic(item);
             return false;
@@ -115,10 +113,13 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
         recyclerView.setOnGetDataListener(new LazyLoadingRecycler.OnGetDataListener() {
             @Override
             public void getData() {
-                topicListPresenter.loadMore();
+                //Logger.logThis(" ПОДГРУЖАЮ ДАННЫЕ ----- ");
+                topicListPresenter.getTopicListManager().loadMore();
             }
         });
 
+
+        recyclerView.lockLazyLoading();
     }
 
 
@@ -160,13 +161,39 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
     }
 
     @Override
-    public void enableLoadMore(boolean booleanWrapper) {
+    public void disableLoadMore(ComplexListManager.LazyLoadingStopCause cause) {
+        recyclerView.lockLazyLoading();
+
+        if(cause== ComplexListManager.LazyLoadingStopCause.WAITING){
+            if(footerAdapter.getAdapterItemCount()==0){
+                footerAdapter.add(new ProgressItem().withEnabled(false));
+            }
+        } else {
+            if(footerAdapter.getAdapterItemCount()>0) {
+                footerAdapter.clear();
+            }
+        }
+    }
+
+    @Override
+    public void enableLoadMore() {
+        recyclerView.unlockLazyLoading();
+
+        if(footerAdapter.getAdapterItemCount()==0)
+            footerAdapter.add(new ProgressItem().withEnabled(false));
+    }
+
+
+   /* @Override
+    public void enableLoadMore(boolean booleanWrapper,BooleanWrapper taskInProgress) {
         footerAdapter.clear();
         if (booleanWrapper) {
             footerAdapter.add(new ProgressItem().withEnabled(false));
-            recyclerView.unlockLazyLoading();
+            if(!taskInProgress.getState())
+                recyclerView.unlockLazyLoading();
+
         }
-    }
+    }*/
 
 
     public void moveInMultiselectMode(){
@@ -178,7 +205,7 @@ public class MyTopicListFragment extends MvpAppCompatFragment implements ITopicL
             clearSelected.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             clearSelected.setIcon(R.drawable.ic_delete_white_24dp);
             clearSelected.setOnMenuItemClickListener(item -> {
-                topicListPresenter.deleteTopics(adapter.getFastItemAdapter().getSelections());
+                topicListPresenter.getTopicListManager().deleteItem(adapter.getFastItemAdapter().getSelections());
                 leaveMultiselectMode();
                 return false;
             });

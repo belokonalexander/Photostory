@@ -9,6 +9,9 @@ import com.mikepenz.fastadapter.IItem;
 import java.util.List;
 import java.util.Set;
 
+import ru.belokonalexander.photostory.Moxy.Strategy.AddToEndSingleStrategyByTag;
+import ru.belokonalexander.photostory.Views.Adapters.ComplexListManager;
+
 
 /**
  * Created by Alexander on 16.05.2017.
@@ -28,9 +31,6 @@ public interface ITopicListView extends MvpView {
     @StateStrategyType(value = AddToEndSingleStrategy.class)
     void showTopicList(List<IItem> part);
 
-
-
-
     @StateStrategyType(value = AddToEndSingleStrategy.class)
     void showTopic(IItem item);
 
@@ -40,7 +40,15 @@ public interface ITopicListView extends MvpView {
     @StateStrategyType(value = AddToEndSingleStrategy.class)
     void changeOnSelectTopicState();
 
-    @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void enableLoadMore(boolean booleanWrapper);
+    /*@StateStrategyType(value = AddToEndSingleStrategy.class)
+    void enableLoadMore(boolean booleanWrapper, BooleanWrapper taskInProgress);*/
+
+    @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "recyclerState")
+    void disableLoadMore(ComplexListManager.LazyLoadingStopCause cause);
+
+    @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "recyclerState")
+    void enableLoadMore();
+
+
 
 }

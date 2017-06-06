@@ -10,7 +10,7 @@ package ru.belokonalexander.photostory.Helpers;
 public class BooleanWrapper {
 
 
-        Boolean state;
+        Boolean state = false;
 
         public Boolean getState() {
             return state;
