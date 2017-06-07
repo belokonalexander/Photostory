@@ -43,7 +43,7 @@ public class TopicListPresenter extends MvpPresenter<ITopicListView> implements 
 
     @Override
     public Single<List<IItem>> getMoreFunction(Paginator paginator) {
-        return myTopicListInteractor.getTopicsForList(paginator);
+        return myTopicListInteractor.getData(paginator);
     }
 
     @Override

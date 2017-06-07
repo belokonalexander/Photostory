@@ -27,6 +27,6 @@ public class TopicRepository implements ITopicRepository {
             }
 
             return topicList;
-        }).delay(2000, TimeUnit.MILLISECONDS);
+        }).delay(500, TimeUnit.MILLISECONDS);
     }
 }

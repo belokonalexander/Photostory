@@ -18,6 +18,7 @@ public class SelectableFastAdapterWrapper<Item extends IItem> {
     private ISelectedItem currentSelectedItem;
 
     private boolean selectMainItem = false;
+    private boolean multiSelect = false;
 
     private FastAdapter.OnClickListener<Item> onClickListener;
 
@@ -33,16 +34,14 @@ public class SelectableFastAdapterWrapper<Item extends IItem> {
 
     private void initBehaviour(){
 
-        adapter.withSelectable(true);
-        adapter.withSelectWithItemUpdate(true);
-        adapter.withSelectOnLongClick(true);
-        adapter.withMultiSelect(true);
+
 
         adapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
             @Override
             public boolean onClick(View v, IAdapter<Item> adapter, Item item, int position) {
 
-                    if(adapter.getFastAdapter().getSelectedItems().size()>0 && item.isSelectable()){
+
+                if(adapter.getFastAdapter().getSelectedItems().size()>0 && item.isSelectable() && multiSelect){
                         adapter.getFastAdapter().toggleSelection(position);
                         return false;
                     }
@@ -80,4 +79,12 @@ public class SelectableFastAdapterWrapper<Item extends IItem> {
     }
 
 
+    public void setMultiSelect() {
+        multiSelect = true;
+
+        adapter.withSelectable(true);
+        adapter.withSelectWithItemUpdate(true);
+        adapter.withSelectOnLongClick(true);
+
+    }
 }

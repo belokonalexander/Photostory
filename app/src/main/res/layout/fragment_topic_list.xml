@@ -8,7 +8,7 @@
     android:clickable="true">
 
 
-                <ru.belokonalexander.photostory.Views.Recyclers.LazyLoadingRecycler
+                <ru.belokonalexander.photostory.Views.Recyclers.MvpLazyRecycler
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/topics_recycler"

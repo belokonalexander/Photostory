@@ -12,30 +12,23 @@ import java.util.Set;
 import ru.belokonalexander.photostory.Moxy.Strategy.AddToEndSingleStrategyByTag;
 import ru.belokonalexander.photostory.Views.Adapters.ComplexListManager;
 
-
 /**
- * Created by Alexander on 16.05.2017.
+ * Created by Alexander on 07.06.2017.
  */
 
-public interface ITopicListView extends MvpView {
-
-    /**
-     * два метода отличаются стратегией и выполняют одну и ту же функцию - добавление данных в список
-     * но после пересоздания view, будет выполнен только @showTopicList, который в параметре @data
-     * содержит ссылку на весь список, в отличие от @afterLoadMoreTopics
-     */
+public interface IListView extends MvpView{
 
     @StateStrategyType(value = SkipStrategy.class)
-    void afterLoadMoreTopics(List<IItem> data);
+    void afterLoadMore(List<IItem> part);
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void showTopicList(List<IItem> part);
+    void showList(List<IItem> data);
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void showTopic(IItem item);
+    void itemClick(IItem item);
 
     @StateStrategyType(value = SkipStrategy.class)
-    void deleteTopics(Set<Integer> itemsPositions);
+    void deleteItem(Set<Integer> itemsPositions);
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
     void changeOnSelectTopicState();
@@ -46,6 +39,7 @@ public interface ITopicListView extends MvpView {
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "recyclerState")
     void enableLoadMore();
 
-
+ /*   @StateStrategyType(value = AddToEndSingleStrategy.class)
+    void select(IItem iitem);*/
 
 }

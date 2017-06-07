@@ -10,7 +10,6 @@ import io.reactivex.SingleSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import ru.belokonalexander.photostory.Views.Adapters.IPaginator;
-import ru.belokonalexander.photostory.Views.Adapters.Paginator;
 import ru.belokonalexander.photostory.business.MappersUtils.ItemsToFlexibleMapper;
 import ru.belokonalexander.photostory.data.LocalStorage.Models.Topic;
 import ru.belokonalexander.photostory.data.repositories.MyTopicList.ITopicRepository;
@@ -20,7 +19,7 @@ import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicHolder
  * Created by Alexander on 16.05.2017.
  */
 
-public class MyTopicListInteractor implements IMyTopicListInteractor {
+public class MyTopicListInteractor implements IMyTopicListInteractor<IItem> {
 
     ITopicRepository topicRepository;
     ItemsToFlexibleMapper mapper;
@@ -31,7 +30,7 @@ public class MyTopicListInteractor implements IMyTopicListInteractor {
     }
 
     @Override
-    public Single<List<IItem>> getTopicsForList(IPaginator paginator) {
+    public Single<List<IItem>> getData(IPaginator paginator) {
         return topicRepository.getTopics(paginator).flatMap(new Function<List<Topic>, SingleSource<List<TopicHolderModel>>>() {
             @Override
             public SingleSource<List<TopicHolderModel>> apply(@NonNull List<Topic> topics) throws Exception {
@@ -45,5 +44,7 @@ public class MyTopicListInteractor implements IMyTopicListInteractor {
             }
         }).flatMap(mapper.toFlexible());
     }
+
+
 
 }
