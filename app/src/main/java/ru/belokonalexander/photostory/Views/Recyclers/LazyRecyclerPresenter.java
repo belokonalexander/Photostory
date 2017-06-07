@@ -11,8 +11,8 @@ import io.reactivex.Single;
 import ru.belokonalexander.photostory.Views.Adapters.ComplexListManager;
 import ru.belokonalexander.photostory.Views.Adapters.ComplexListViewController;
 import ru.belokonalexander.photostory.Views.Adapters.Paginator;
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.IListInteractor;
-import ru.belokonalexander.photostory.presentation.MyTopicList.view.IListView;
+import ru.belokonalexander.photostory.business.ListUtils.IListInteractor;
+import ru.belokonalexander.photostory.presentation.Common.View.IListView;
 
 /**
  * Created by Alexander on 07.06.2017.
@@ -64,18 +64,18 @@ public class LazyRecyclerPresenter extends MvpPresenter<IListView> implements Co
     @Override
     public void deleteItems(Set<Integer> positions) {
         getViewState().deleteItem(positions);
+        getViewState().changeOnSelectTopicState();
     }
 
-
-
-    public void onItemClick(IItem topicItem) {
-        getViewState().itemClick(topicItem);
-    }
-
+    @Override
     public void changeSelectionState() {
         getViewState().changeOnSelectTopicState();
     }
 
+    @Override
+    public void selectItem(IItem item) {
+        getViewState().selectItem(item);
+    }
 
     public ComplexListManager getListManager() {
         return listManager;

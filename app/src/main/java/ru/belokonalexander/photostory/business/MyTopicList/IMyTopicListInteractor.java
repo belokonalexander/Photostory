@@ -1,13 +1,17 @@
 package ru.belokonalexander.photostory.business.MyTopicList;
 
-import ru.belokonalexander.photostory.Views.Recyclers.Adapters.IListInteractor;
+import com.mikepenz.fastadapter.IItem;
+
+import java.util.Set;
+
+import io.reactivex.Single;
 
 /**
  * Created by Alexander on 16.05.2017.
  */
 
-public interface IMyTopicListInteractor<T> extends IListInteractor<T> {
+public interface IMyTopicListInteractor {
 
-    //Single<List<T>> getTopicsForList(IPaginator paginator);
+    Single<Set<IItem>> deleteItems(Set<IItem> iItem);
 
 }

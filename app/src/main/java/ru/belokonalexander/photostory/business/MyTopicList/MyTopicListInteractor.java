@@ -10,6 +10,7 @@ import io.reactivex.SingleSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import ru.belokonalexander.photostory.Views.Adapters.IPaginator;
+import ru.belokonalexander.photostory.business.ListUtils.IListInteractor;
 import ru.belokonalexander.photostory.business.MappersUtils.ItemsToFlexibleMapper;
 import ru.belokonalexander.photostory.data.LocalStorage.Models.Topic;
 import ru.belokonalexander.photostory.data.repositories.MyTopicList.ITopicRepository;
@@ -19,7 +20,7 @@ import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicHolder
  * Created by Alexander on 16.05.2017.
  */
 
-public class MyTopicListInteractor implements IMyTopicListInteractor<IItem> {
+public class MyTopicListInteractor implements IListInteractor<IItem> {
 
     ITopicRepository topicRepository;
     ItemsToFlexibleMapper mapper;
@@ -38,6 +39,7 @@ public class MyTopicListInteractor implements IMyTopicListInteractor<IItem> {
                     List<TopicHolderModel> topicModels = new ArrayList<>();
                     for(Topic topic : topics){
                         topicModels.add(new TopicHolderModel(topic.getTitle(), topic.getId()));
+                        //topicModels.add(new TopicHolderModelImmutable(topic.getTitle(), topic.getId()));
                     }
                     return topicModels;
                 });

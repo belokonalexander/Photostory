@@ -1,5 +1,7 @@
 package ru.belokonalexander.photostory.Views.Adapters;
 
+import com.mikepenz.fastadapter.IItem;
+
 import java.util.List;
 import java.util.Set;
 
@@ -23,5 +25,8 @@ public interface ComplexListViewController<T>  {
 
     void deleteItems(Set<Integer> positions);
 
+    void selectItem(IItem item);
+
+    void changeSelectionState();
 
 }

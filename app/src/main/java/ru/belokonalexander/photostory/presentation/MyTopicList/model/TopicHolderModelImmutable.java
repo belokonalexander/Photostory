@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.FastAdapter;
 
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,14 +21,18 @@ import ru.belokonalexander.photostory.Views.Adapters.AbstractSelectedItem;
  * Created by Alexander on 16.05.2017.
  */
 
-public class TopicHolderModel extends AbstractSelectedItem<TopicHolderModel,TopicHolderModel.ViewHolder> {
+public class TopicHolderModelImmutable extends AbstractSelectedItem<TopicHolderModelImmutable,TopicHolderModelImmutable.ViewHolder> {
 
     private String title;
     private Long id;
 
-    public TopicHolderModel(String title, Long id) {
-        this.title = title;
-        this.id = id;
+
+
+    public TopicHolderModelImmutable() {
+
+            this.title =  " |||| " + new Random().nextInt();
+            this.id = new Random().nextLong();
+            mSelectable = false;
     }
 
     public String getTitle() {
@@ -48,8 +53,8 @@ public class TopicHolderModel extends AbstractSelectedItem<TopicHolderModel,Topi
 
     @Override
     public boolean equals(Object inObject) {
-        if (inObject instanceof TopicHolderModel) {
-            TopicHolderModel inItem = (TopicHolderModel) inObject;
+        if (inObject instanceof TopicHolderModelImmutable) {
+            TopicHolderModelImmutable inItem = (TopicHolderModelImmutable) inObject;
             return this.id.equals(inItem.id);
         }
         return false;
@@ -58,7 +63,7 @@ public class TopicHolderModel extends AbstractSelectedItem<TopicHolderModel,Topi
 
     @Override
     public int getType() {
-        return R.id.container_topic_holder;
+        return R.id.activity_create_topic;
     }
 
     @Override
@@ -66,9 +71,8 @@ public class TopicHolderModel extends AbstractSelectedItem<TopicHolderModel,Topi
         super.unbindView(holder);
         holder.titleTextView.setText(null);
 
-        if(isSelected()) {
+        if(isSelected())
             holder.selectableCheckBox.setChecked(false);
-        }
 
     }
 
@@ -78,7 +82,7 @@ public class TopicHolderModel extends AbstractSelectedItem<TopicHolderModel,Topi
     }
 
     @Override
-    public FastAdapter.OnClickListener<TopicHolderModel> getOnPreItemClickListener() {
+    public FastAdapter.OnClickListener<TopicHolderModelImmutable> getOnPreItemClickListener() {
 
         return super.getOnPreItemClickListener();
     }

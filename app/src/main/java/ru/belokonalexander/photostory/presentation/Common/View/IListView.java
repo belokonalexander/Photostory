@@ -1,4 +1,4 @@
-package ru.belokonalexander.photostory.presentation.MyTopicList.view;
+package ru.belokonalexander.photostory.presentation.Common.View;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
@@ -25,7 +25,7 @@ public interface IListView extends MvpView{
     void showList(List<IItem> data);
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void itemClick(IItem item);
+    void selectItem(IItem item);
 
     @StateStrategyType(value = SkipStrategy.class)
     void deleteItem(Set<Integer> itemsPositions);
@@ -39,7 +39,6 @@ public interface IListView extends MvpView{
     @StateStrategyType(value = AddToEndSingleStrategyByTag.class, tag = "recyclerState")
     void enableLoadMore();
 
- /*   @StateStrategyType(value = AddToEndSingleStrategy.class)
-    void select(IItem iitem);*/
+
 
 }

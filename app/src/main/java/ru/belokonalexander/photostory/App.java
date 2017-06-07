@@ -4,9 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import javax.inject.Inject;
+
 import ru.belokonalexander.photostory.DI.application.AppComponent;
 import ru.belokonalexander.photostory.DI.application.AppModule;
 import ru.belokonalexander.photostory.DI.application.DaggerAppComponent;
+import ru.belokonalexander.photostory.data.LocalStorage.Debug.DebugManager;
 
 
 /**
@@ -17,6 +20,8 @@ public class App extends Application {
 
     private AppComponent appComponent;
 
+    @Inject
+    DebugManager debugManager;
 
     public AppComponent getAppComponent() {
         return appComponent;
@@ -26,6 +31,12 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+        appComponent.inject(this);
+        initData();
+    }
+
+    private void initData() {
+        debugManager.fillTopicData();
     }
 
     @NonNull

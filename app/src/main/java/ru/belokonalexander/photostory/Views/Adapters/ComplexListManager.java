@@ -3,6 +3,7 @@ package ru.belokonalexander.photostory.Views.Adapters;
 import com.mikepenz.fastadapter.IItem;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.belokonalexander.photostory.Helpers.BooleanWrapper;
+import ru.belokonalexander.photostory.Helpers.Logger;
 
 /**
  * Created by Alexander on 06.06.2017.
@@ -42,13 +44,16 @@ public class ComplexListManager<T extends IItem>{
     }
 
     private void handleFailureTopicList(Throwable throwable) {
+        throwable.printStackTrace();
+        Logger.logThis(" Error: " + throwable);
         loadMoreInProgress.setState(false);
     }
 
     private void handleSuccessTopicList(List<T> data) {
 
-        loadMoreInProgress.setState(false);
+        Logger.logThis(" Success  recieve: " + data);
 
+        loadMoreInProgress.setState(false);
 
         paginator.calculateAllDataWasObtaining(data.size());
         int wasSize = content.size();
@@ -66,21 +71,21 @@ public class ComplexListManager<T extends IItem>{
 
     }
 
-    public void deleteItem(Set<Integer> positions) {
-
+    public void deleteItem(Set<IItem> items) {
 
         Iterator it = content.iterator();
         int pos = 0;
-
+        Set<Integer> deleted = new HashSet<>();
         while(it.hasNext()){
-            it.next();
-            if(positions.contains(pos)){
+            IItem item = (IItem) it.next();
+            if(items.contains(item)){
                 it.remove();
+                deleted.add(pos);
             }
             pos++;
         }
 
-        controller.deleteItems(positions);
+        controller.deleteItems(deleted);
 
         if(paginator.hasMore())
             controller.enableLoadMore();
@@ -88,6 +93,14 @@ public class ComplexListManager<T extends IItem>{
 
     public Paginator getPaginator() {
         return paginator;
+    }
+
+    public void selectItem(IItem item) {
+        controller.selectItem(item);
+    }
+
+    public void changeSelectionState() {
+        controller.changeSelectionState();
     }
 
     public enum LazyLoadingStopCause{

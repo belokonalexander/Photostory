@@ -1,4 +1,4 @@
-package ru.belokonalexander.photostory.Views.Recyclers.Adapters;
+package ru.belokonalexander.photostory.business.ListUtils;
 
 import java.util.List;
 
@@ -12,5 +12,6 @@ import ru.belokonalexander.photostory.Views.Adapters.IPaginator;
 public interface IListInteractor<T> {
 
     Single<List<T>> getData(IPaginator paginator);
+
 
 }

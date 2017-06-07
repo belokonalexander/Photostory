@@ -4,13 +4,11 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.mikepenz.fastadapter.IItem;
 
-import java.util.List;
 import java.util.Set;
 
-import io.reactivex.Single;
-import ru.belokonalexander.photostory.Views.Adapters.ComplexListManager;
-import ru.belokonalexander.photostory.Views.Adapters.ComplexListViewController;
-import ru.belokonalexander.photostory.Views.Adapters.Paginator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import ru.belokonalexander.photostory.Helpers.Logger;
 import ru.belokonalexander.photostory.business.MyTopicList.IMyTopicListInteractor;
 import ru.belokonalexander.photostory.presentation.MyTopicList.view.ITopicListView;
 
@@ -19,66 +17,32 @@ import ru.belokonalexander.photostory.presentation.MyTopicList.view.ITopicListVi
  */
 
 @InjectViewState
-public class TopicListPresenter extends MvpPresenter<ITopicListView> implements ComplexListViewController<IItem> {
+public class TopicListPresenter extends MvpPresenter<ITopicListView>  {
 
 
     private IMyTopicListInteractor myTopicListInteractor;
-    private ComplexListManager topicListManager;
 
-    public TopicListPresenter(IMyTopicListInteractor myTopicListInteractor, Paginator paginator) {
+    public TopicListPresenter(IMyTopicListInteractor myTopicListInteractor) {
         this.myTopicListInteractor = myTopicListInteractor;
-        this.topicListManager = new ComplexListManager<>(paginator,this);
     }
 
-    @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
-        topicListManager.loadMore();
+    public void deleteTopics(Set<IItem> selected){
+        Logger.logThis(" Удаляю: " + selected);
+
+        myTopicListInteractor.deleteItems(selected)
+                .subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleSuccessDelete, this::handleFailureDelete);
+
     }
 
-    public ComplexListManager getTopicListManager(){
-        return topicListManager;
+    private void handleSuccessDelete(Set<IItem> iItems) {
+        getViewState().delete(iItems);
     }
 
+    private void handleFailureDelete(Throwable throwable) {
 
-    @Override
-    public Single<List<IItem>> getMoreFunction(Paginator paginator) {
-        return myTopicListInteractor.getData(paginator);
-    }
-
-    @Override
-    public void showPartialList(List<IItem> data) {
-        getViewState().afterLoadMoreTopics(data);
-    }
-
-    @Override
-    public void showFullList(List<IItem> content) {
-        getViewState().showTopicList(content);
-    }
-
-    @Override
-    public void enableLoadMore() {
-        getViewState().enableLoadMore();
-    }
-
-    @Override
-    public void disableLoadMore(ComplexListManager.LazyLoadingStopCause cause) {
-        getViewState().disableLoadMore(cause);
     }
 
 
-    @Override
-    public void deleteItems(Set<Integer> positions) {
-        getViewState().deleteTopics(positions);
-    }
-
-
-    public void selectTopic(IItem topicItem) {
-        getViewState().showTopic(topicItem);
-    }
-
-    public void changeTopicSelectionState() {
-        getViewState().changeOnSelectTopicState();
-    }
 
 }

@@ -27,8 +27,8 @@ import ru.belokonalexander.photostory.App;
 import ru.belokonalexander.photostory.DI.common.Modules.TopicModule;
 import ru.belokonalexander.photostory.Views.Adapters.ComplexListManager;
 import ru.belokonalexander.photostory.Views.Adapters.SelectableFastAdapterWrapper;
+import ru.belokonalexander.photostory.presentation.Common.View.IListView;
 import ru.belokonalexander.photostory.presentation.MyTopicList.model.TopicHolderModel;
-import ru.belokonalexander.photostory.presentation.MyTopicList.view.IListView;
 
 /**
  * Created by Alexander on 07.06.2017.
@@ -84,7 +84,11 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
         adapter.setClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
-                presenter.onItemClick(item);
+                //presenter.onItemClick(item);
+
+                if(onClickListener!=null)
+                    onClickListener.onClick(item);
+
                 return false;
             }
         });
@@ -105,14 +109,13 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
             }
         });
 
-        adapter.getFastItemAdapter().withSelectionListener((item, selected) -> presenter.changeSelectionState());
+        adapter.getFastItemAdapter().withSelectionListener((item, selected) -> presenter.getListManager().changeSelectionState());
 
         setAdapter(footerAdapter.wrap(adapter.getFastItemAdapter()));
 
         setOnGetDataListener(new LazyLoadingRecycler.OnGetDataListener() {
             @Override
             public void getData() {
-                //Logger.logThis(" ПОДГРУЖАЮ ДАННЫЕ ----- ");
                 presenter.getListManager().loadMore();
             }
         });
@@ -124,6 +127,11 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
         getMvpDelegate().onCreate();
         getMvpDelegate().onAttach();
     }
+
+    public FastAdapter getAdapter(){
+        return adapter.getFastItemAdapter();
+    }
+
 
     @Override
     protected void onDetachedFromWindow() {
@@ -155,11 +163,8 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
     }
 
     @Override
-    public void itemClick(IItem item) {
+    public void selectItem(IItem item) {
         adapter.select(item);
-        if(onClickListener!=null){
-            onClickListener.onClick(item);
-        }
     }
 
     @Override
@@ -167,8 +172,12 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
         adapter.getFastItemAdapter().deleteAllSelectedItems();
     }
 
-    public void deleteSelected(){
-        presenter.getListManager().deleteItem(adapter.getFastItemAdapter().getSelections());
+    public void deleteSelected(Set<IItem> selected){
+        presenter.getListManager().deleteItem(selected);
+    }
+
+    public void selectMain(IItem item){
+        presenter.getListManager().selectItem(item);
     }
 
     @Override
@@ -223,6 +232,12 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
         void onClick(IItem iItem);
     }
 
+    public Set<IItem> getSelectedItems(){
+        return adapter.getFastItemAdapter().getSelectedItems();
+    }
+    /**
+     * должна инициироваться только View-составляющая, ничего больше
+     */
     public interface OnMultiSelect {
         void moveInMultiselectMode();
         void leaveMultiselectMode();
