@@ -22,6 +22,8 @@ public class DebugManager {
 
     public void fillTopicData() {
 
+
+
         long count = daoSession.getTopicDao().count();
 
         for(int i = (int) count; i < topicLimit; i++){

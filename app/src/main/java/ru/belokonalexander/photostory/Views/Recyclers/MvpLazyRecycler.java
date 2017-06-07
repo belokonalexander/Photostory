@@ -169,7 +169,18 @@ public class MvpLazyRecycler extends LazyLoadingRecycler implements IListView {
 
     @Override
     public void deleteItem(Set<Integer> itemsPositions) {
+        /**
+         * удаляются только реально удаленные объекты (позиции itemsPositions)
+         */
+
+        adapter.getFastItemAdapter().deselect();
+
+        for(Integer integer : itemsPositions){
+            adapter.getFastItemAdapter().select(integer,false);
+        }
+
         adapter.getFastItemAdapter().deleteAllSelectedItems();
+
     }
 
     public void deleteSelected(Set<IItem> selected){
